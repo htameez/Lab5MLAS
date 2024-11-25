@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17F419532CF45C2A0075CF9B /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F419522CF45C2A0075CF9B /* TutorialViewController.swift */; };
 		B6022E672C108DB400E2CC70 /* MlaasModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6022E662C108DB400E2CC70 /* MlaasModel.swift */; };
 		B67483DB1ACA2D6800A9970E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67483DA1ACA2D6800A9970E /* AppDelegate.swift */; };
 		B67483DD1ACA2D6800A9970E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67483DC1ACA2D6800A9970E /* ViewController.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		17F419522CF45C2A0075CF9B /* TutorialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
 		B6022E662C108DB400E2CC70 /* MlaasModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MlaasModel.swift; sourceTree = "<group>"; };
 		B67483D51ACA2D6800A9970E /* Lab5MLAS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lab5MLAS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B67483D91ACA2D6800A9970E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 				B6022E662C108DB400E2CC70 /* MlaasModel.swift */,
 				B694B0191FA377E4009A4277 /* RingBuffer.swift */,
 				B67483DE1ACA2D6800A9970E /* Main.storyboard */,
+				17F419522CF45C2A0075CF9B /* TutorialViewController.swift */,
 				B67483E11ACA2D6800A9970E /* Images.xcassets */,
 				B67483E31ACA2D6800A9970E /* LaunchScreen.xib */,
 				B67483D81ACA2D6800A9970E /* Supporting Files */,
@@ -153,6 +156,7 @@
 			files = (
 				B67483DD1ACA2D6800A9970E /* ViewController.swift in Sources */,
 				B67483DB1ACA2D6800A9970E /* AppDelegate.swift in Sources */,
+				17F419532CF45C2A0075CF9B /* TutorialViewController.swift in Sources */,
 				B6022E672C108DB400E2CC70 /* MlaasModel.swift in Sources */,
 				B694B01A1FA377E4009A4277 /* RingBuffer.swift in Sources */,
 			);
