@@ -181,7 +181,7 @@ class TutorialViewController: UIViewController {
     func createDashedLayer(for path: UIBezierPath) -> CAShapeLayer {
         let dashedLayer = CAShapeLayer()
         dashedLayer.path = path.cgPath
-        dashedLayer.strokeColor = UIColor.white.cgColor
+        dashedLayer.strokeColor = UIColor.black.cgColor
         dashedLayer.lineWidth = 5.0
         dashedLayer.lineDashPattern = [8, 4] // Dash and gap lengths
         dashedLayer.fillColor = UIColor.clear.cgColor
@@ -196,8 +196,8 @@ class TutorialViewController: UIViewController {
         
         let layer = CAShapeLayer()
         layer.path = dot.cgPath
-        layer.strokeColor = UIColor.white.cgColor
-        layer.fillColor = UIColor.white.cgColor // Solid fill
+        layer.strokeColor = UIColor.black.cgColor
+        layer.fillColor = UIColor.black.cgColor // Solid fill
         layer.lineWidth = 1.0
         view.layer.addSublayer(layer)
 
