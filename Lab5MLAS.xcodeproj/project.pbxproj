@@ -18,7 +18,7 @@
 
 /* Begin PBXFileReference section */
 		B6022E662C108DB400E2CC70 /* MlaasModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MlaasModel.swift; sourceTree = "<group>"; };
-		B67483D51ACA2D6800A9970E /* HTTPSwiftExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HTTPSwiftExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B67483D51ACA2D6800A9970E /* Lab5MLAS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lab5MLAS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B67483D91ACA2D6800A9970E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B67483DA1ACA2D6800A9970E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B67483DC1ACA2D6800A9970E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -50,7 +50,7 @@
 		B67483D61ACA2D6800A9970E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B67483D51ACA2D6800A9970E /* HTTPSwiftExample.app */,
+				B67483D51ACA2D6800A9970E /* Lab5MLAS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -81,9 +81,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B67483D41ACA2D6800A9970E /* HTTPSwiftExample */ = {
+		B67483D41ACA2D6800A9970E /* Lab5MLAS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B67483F41ACA2D6800A9970E /* Build configuration list for PBXNativeTarget "HTTPSwiftExample" */;
+			buildConfigurationList = B67483F41ACA2D6800A9970E /* Build configuration list for PBXNativeTarget "Lab5MLAS" */;
 			buildPhases = (
 				B67483D11ACA2D6800A9970E /* Sources */,
 				B67483D21ACA2D6800A9970E /* Frameworks */,
@@ -93,9 +93,9 @@
 			);
 			dependencies = (
 			);
-			name = HTTPSwiftExample;
+			name = Lab5MLAS;
 			productName = HTTPSwiftExample;
-			productReference = B67483D51ACA2D6800A9970E /* HTTPSwiftExample.app */;
+			productReference = B67483D51ACA2D6800A9970E /* Lab5MLAS.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -128,7 +128,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B67483D41ACA2D6800A9970E /* HTTPSwiftExample */,
+				B67483D41ACA2D6800A9970E /* Lab5MLAS */,
 			);
 		};
 /* End PBXProject section */
@@ -292,15 +292,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = FD7Y9YJKBW;
-				INFOPLIST_FILE = HTTPSwiftExample/Info.plist;
+				DEVELOPMENT_TEAM = D9B6BU2J6A;
+				INFOPLIST_FILE = Lab5MLAS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "SMU.$(PRODUCT_NAME:rfc1034identifier)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = SMU.HTTPSwiftEx;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = SMU.Lab5MLAS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -310,15 +310,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = FD7Y9YJKBW;
-				INFOPLIST_FILE = HTTPSwiftExample/Info.plist;
+				DEVELOPMENT_TEAM = D9B6BU2J6A;
+				INFOPLIST_FILE = Lab5MLAS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "SMU.$(PRODUCT_NAME:rfc1034identifier)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = SMU.HTTPSwiftEx;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = SMU.Lab5MLAS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -336,7 +336,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B67483F41ACA2D6800A9970E /* Build configuration list for PBXNativeTarget "HTTPSwiftExample" */ = {
+		B67483F41ACA2D6800A9970E /* Build configuration list for PBXNativeTarget "Lab5MLAS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B67483F51ACA2D6800A9970E /* Debug */,
