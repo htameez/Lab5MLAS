@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="wg1-y6-iVE">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="wg1-y6-iVE">
     <device id="retina6_3" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -30,15 +30,6 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mzz-AY-4yF">
-                                <rect key="frame" x="99" y="742" width="204" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="gray" title="Take Quiz"/>
-                                <connections>
-                                    <segue destination="iF6-79-kL2" kind="push" id="uQx-OK-JYM"/>
-                                </connections>
-                            </button>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wAq-CS-73Q">
                                 <rect key="frame" x="16" y="624" width="370" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -54,12 +45,11 @@
                         <outlet property="instructionsLabel" destination="8ip-is-tYQ" id="gX6-yo-2qv"/>
                         <outlet property="progressLabel" destination="wAq-CS-73Q" id="Tl1-3w-C6a"/>
                         <outlet property="progressView" destination="K9O-z0-hS9" id="UPt-wk-fiI"/>
-                        <outlet property="quizButton" destination="Mzz-AY-4yF" id="oaM-QJ-348"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lke-6T-cc7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1067.1641791044776" y="135.92677345537757"/>
+            <point key="canvasLocation" x="1082" y="-248"/>
         </scene>
         <!--Quiz View Controller-->
         <scene sceneID="Nnj-OS-Gbn">
@@ -72,13 +62,42 @@
                     <view key="view" contentMode="scaleToFill" id="vW5-ey-2SJ">
                         <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oiE-Hs-2YY">
+                                <rect key="frame" x="136" y="740" width="130" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Submit">
+                                    <fontDescription key="titleFontDescription" type="system" pointSize="25"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="submitButtonPressed:" destination="iF6-79-kL2" eventType="touchUpInside" id="0hm-1c-MGu"/>
+                                </connections>
+                            </button>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="bN2-P7-P40">
+                                <rect key="frame" x="45" y="114" width="313" height="4"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </progressView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jax-TC-EPW">
+                                <rect key="frame" x="45" y="145" width="313" height="71"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="31"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="fEH-gH-SLf"/>
+                    <connections>
+                        <outlet property="instructionsLabel" destination="Jax-TC-EPW" id="RaV-vT-TtU"/>
+                        <outlet property="progressView" destination="bN2-P7-P40" id="IC3-gz-2R3"/>
+                        <outlet property="submitButton" destination="oiE-Hs-2YY" id="twl-yK-Ul9"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1gR-Yx-p1X" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1819.4029850746267" y="135.92677345537757"/>
+            <point key="canvasLocation" x="1176" y="412"/>
         </scene>
         <!--Home View Controller-->
         <scene sceneID="qKY-R1-62O">
@@ -100,7 +119,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qKH-f6-xdj">
-                                <rect key="frame" x="145" y="419" width="112" height="37"/>
+                                <rect key="frame" x="145" y="516" width="112" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Tutorial"/>
@@ -108,12 +127,64 @@
                                     <segue destination="UAt-8T-0vB" kind="push" id="5JP-Dk-Oz7"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4fB-y2-cOy">
+                                <rect key="frame" x="139" y="401" width="124" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="selectModelButton"/>
+                                <color key="tintColor" red="0.25854805910000001" green="0.5" blue="0.26849262870000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Select Model"/>
+                                <connections>
+                                    <action selector="selectModelButtonTapped:" destination="Yhm-Qa-Kef" eventType="touchUpInside" id="KH2-XH-Tmg"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xbd-ou-75S">
+                                <rect key="frame" x="125" y="334" width="154" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="compareModelsButton"/>
+                                <color key="tintColor" red="0.71181564919999996" green="0.2177189712" blue="0.29357126480000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Compare Models"/>
+                                <connections>
+                                    <action selector="compareModelsButtonTapped:" destination="Yhm-Qa-Kef" eventType="touchUpInside" id="XRG-ej-t6I"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Oec-eV-GIr">
+                                <rect key="frame" x="172" y="600" width="59" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" identifier="quizButton"/>
+                                <color key="tintColor" red="0.8221899225" green="0.68441143500000001" blue="0.2299497627" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Quiz"/>
+                                <connections>
+                                    <action selector="quizButtonTapped:" destination="Yhm-Qa-Kef" eventType="touchUpInside" id="Xwd-dq-CPw"/>
+                                    <segue destination="iF6-79-kL2" kind="push" identifier="showQuizSegue" id="cm7-Ld-TQU"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Compare models to see their performance, then select one to use!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lKu-Yu-TQb">
+                                <rect key="frame" x="68" y="219" width="267" height="107"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="No model selected." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YCz-SE-X6x">
+                                <rect key="frame" x="88" y="464" width="226" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="Vpk-Tx-t5b"/>
                     <connections>
+                        <outlet property="compareModelsButton" destination="xbd-ou-75S" id="37D-Nu-Q0K"/>
                         <outlet property="messageLabel" destination="gVQ-wQ-BgB" id="JJP-OL-vXQ"/>
+                        <outlet property="quizButton" destination="Oec-eV-GIr" id="2Ba-oO-hZZ"/>
+                        <outlet property="selectModelButton" destination="4fB-y2-cOy" id="rtn-XO-llb"/>
+                        <outlet property="selectedModelLabel" destination="YCz-SE-X6x" id="83Z-xu-zIZ"/>
                         <outlet property="tutorialButton" destination="qKH-f6-xdj" id="T7l-ts-tvA"/>
                     </connections>
                 </viewController>

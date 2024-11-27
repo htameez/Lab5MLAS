@@ -15,9 +15,7 @@ protocol ClientDelegate {
 
 enum RequestEnum: String {
     case get = "GET"
-    case put = "PUT"
     case post = "POST"
-    case delete = "DELETE"
 }
 
 enum NetworkError: Error {
@@ -35,17 +33,46 @@ enum NetworkError: Error {
 }
 
 class MlaasModel: NSObject, URLSessionDelegate {
-    // Existing properties and initializations remain the same
-    var server_ip = "192.168.1.234" // Replace with your server IP
-    private var dsid: Int = 1 // Default dsid for training
-    
+    // MARK: - Properties
+    var server_ip = "192.168.1.92"
+    private var dsid: Int = 1 // Default DSID
+
     lazy var session = {
         let sessionConfig = URLSessionConfiguration.ephemeral
-        sessionConfig.timeoutIntervalForRequest = 60.0 // Increased from 5.0
-        sessionConfig.timeoutIntervalForResource = 200.0 // Increased from 8.0
+        sessionConfig.timeoutIntervalForRequest = 60.0
+        sessionConfig.timeoutIntervalForResource = 200.0
         return URLSession(configuration: sessionConfig, delegate: self, delegateQueue: nil)
     }()
     
+    func compareModels(dsid: Int, completion: @escaping (Result<[String: Double], Error>) -> Void) {
+            let urlString = "http://\(server_ip):8000/compare_models/\(dsid)"
+            guard let url = URL(string: urlString) else {
+                completion(.failure(NetworkError.invalidURL))
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = RequestEnum.get.rawValue
+            
+            let task = session.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let data = data,
+                      let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                      let comparisonResults = json["comparison_results"] as? [String: Double] else {
+                    completion(.failure(NetworkError.serverError))
+                    return
+                }
+                
+                completion(.success(comparisonResults))
+            }
+            
+            task.resume()
+        }
+
     // MARK: - Dataset Preparation
     func prepareDataset(dsid: Int, dataPath: String, completion: @escaping (Bool, String?) -> Void) {
         let baseURL = "http://\(server_ip):8000/prepare_dataset/"
@@ -81,13 +108,126 @@ class MlaasModel: NSObject, URLSessionDelegate {
         task.resume()
     }
 
+    // MARK: - Train Model
+    func trainModel(dsid: Int, modelType: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        let urlString = "http://\(server_ip):8000/train_model_sklearn/\(dsid)?model_type=\(modelType)"
+        guard let url = URL(string: urlString) else {
+            completion(.failure(NetworkError.invalidURL))
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = RequestEnum.get.rawValue
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Training error: \(error.localizedDescription)")  // Log the error
+                completion(.failure(error))
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                print("Unexpected server response during training.")  // Log if the server didn't respond as expected
+                completion(.failure(NetworkError.serverError))
+                return
+            }
+
+            // If training is successful, set the flag to true
+            DispatchQueue.main.async {
+                UserDefaults.standard.set(true, forKey: "isTrained")
+                print("Training completed successfully.")
+                completion(.success(()))  // Confirm completion
+            }
+        }.resume()
+    }
+
+
+    // MARK: - Predict
+    func predict(dsid: Int, feature: [Double], modelType: String, completion: @escaping (Result<String, Error>) -> Void) {
+        let baseURL = "http://\(server_ip):8000/predict_sklearn/"
+        guard let url = URL(string: baseURL) else {
+            completion(.failure(NetworkError.invalidURL))
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = RequestEnum.post.rawValue
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let payload: [String: Any] = [
+            "dsid": dsid,
+            "feature": feature,
+            "model_type": modelType
+        ]
+        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: payload)
+        } catch {
+            completion(.failure(error))
+            return
+        }
+
+        let task = session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let data = data else {
+                completion(.failure(NetworkError.serverError))
+                return
+            }
+
+            do {
+                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let prediction = json["prediction"] as? String {
+                    completion(.success(prediction))
+                } else {
+                    completion(.failure(NetworkError.serverError))
+                }
+            } catch {
+                completion(.failure(error))
+            }
+        }
+        task.resume()
+    }
+
+    
+    // MARK: - Upload Individual PNG
+    func uploadPNG(data: Data, filename: String, completion: @escaping (Bool, String?) -> Void) {
+        let serverURL = URL(string: "http://\(server_ip):8000/upload_png/")! // Replace with your server IP
+        var request = URLRequest(url: serverURL)
+        request.httpMethod = "POST"
+        let boundary = UUID().uuidString
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+        var body = Data()
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(filename)\"\r\n".data(using: .utf8)!)
+        body.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
+        body.append(data)
+        body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+
+        let task = session.uploadTask(with: request, from: body) { data, response, error in
+            if let error = error {
+                completion(false, error.localizedDescription)
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                completion(false, "Server responded with an error")
+                return
+            }
+            completion(true, nil)
+        }
+        task.resume()
+    }
     
     func prepareUserDataAndUpload(tutorialData: [(features: [Double], label: String)],
-                                  dsid: Int,
-                                  completion: @escaping (Bool, String?) -> Void) {
+                                   dsid: Int,
+                                   modelType: String,
+                                   completion: @escaping (Bool, String?) -> Void) {
         let baseURL = "http://\(server_ip):8000/prepare_user_data/"
         guard let url = URL(string: baseURL) else {
-            print("Invalid URL")
             completion(false, "Invalid URL")
             return
         }
@@ -106,7 +246,6 @@ class MlaasModel: NSObject, URLSessionDelegate {
             let requestBody = try JSONSerialization.data(withJSONObject: payload)
             request.httpBody = requestBody
         } catch {
-            print("Error serializing JSON: \(error)")
             completion(false, "Error serializing JSON")
             return
         }
@@ -126,41 +265,13 @@ class MlaasModel: NSObject, URLSessionDelegate {
         }
         task.resume()
     }
-    
-    // MARK: - Train Model
-    
-    func trainModel(dsid: Int, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let url = URL(string: "http://\(server_ip):8000/train_model_sklearn/\(dsid)") else {
-            completion(.failure(NetworkError.invalidURL))
-            return
-        }
 
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
 
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-
-            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                completion(.failure(NetworkError.serverError))
-                return
-            }
-
-            DispatchQueue.main.async {
-                completion(.success(()))
-            }
-        }.resume()
-    }
-
-    
-    func initializeOldDataset(dataPath: String, dsid: Int, completion: @escaping (Bool) -> Void) {
-        let baseURL = "http://\(server_ip):8000/initialize_dataset/"
+    // MARK: - Inform Server to Process Uploaded PNGs
+    func prepareUserDataAndProcess(dsid: Int, dataPath: String, completion: @escaping (Bool, String?) -> Void) {
+        let baseURL = "http://\(server_ip):8000/prepare_user_data/"
         guard let url = URL(string: baseURL) else {
-            print("Invalid URL")
-            completion(false)
+            completion(false, "Invalid URL")
             return
         }
 
@@ -168,96 +279,25 @@ class MlaasModel: NSObject, URLSessionDelegate {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let payload: [String: Any] = ["data_path": dataPath, "dsid": dsid]
+        // Payload with dsid and data_path
+        let payload: [String: Any] = ["dsid": dsid, "data_path": dataPath]
+
         do {
-            let requestBody = try JSONSerialization.data(withJSONObject: payload)
-            request.httpBody = requestBody
+            request.httpBody = try JSONSerialization.data(withJSONObject: payload)
         } catch {
-            print("Error serializing JSON: \(error)")
-            completion(false)
+            completion(false, "Error serializing JSON: \(error.localizedDescription)")
             return
         }
 
         let task = session.dataTask(with: request) { data, response, error in
             if let error = error {
-                print("Error initializing dataset: \(error)")
-                completion(false)
+                completion(false, error.localizedDescription)
             } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
-                print("Old dataset initialized successfully.")
-                completion(true)
+                completion(true, nil)
             } else {
-                print("Unexpected server response: \(String(describing: response))")
-                completion(false)
+                completion(false, "Unexpected server response")
             }
         }
         task.resume()
     }
-    
-    // MARK: - Generic Dataset Upload
-    
-    private func uploadDataset(dataset: [(features: [Double], label: String)],
-                               weight: Double,
-                               completion: @escaping (Bool) -> Void) {
-        var successCount = 0
-        
-        for data in dataset {
-            sendData(data.features, withLabel: data.label, weight: weight) { success in
-                if success {
-                    successCount += 1
-                }
-                
-                if successCount == dataset.count {
-                    completion(true) // All items uploaded successfully
-                } else if successCount + (dataset.count - successCount) == dataset.count {
-                    completion(false) // Some or all items failed
-                }
-            }
-        }
-    }
-    
-    // MARK: - Send Data Helper
-    
-    private func sendData(_ array: [Double], withLabel label: String, weight: Double,
-                          completion: @escaping (Bool) -> Void) {
-        let baseURL = "http://\(server_ip):8000/labeled_data/"
-        guard let postUrl = URL(string: baseURL) else {
-            print("Invalid URL")
-            completion(false)
-            return
-        }
-        
-        var request = URLRequest(url: postUrl)
-        do {
-            let requestBody: Data = try JSONSerialization.data(withJSONObject: [
-                "feature": array,
-                "label": label,
-                "dsid": self.dsid,
-                "weight": weight
-            ])
-            
-            request.httpMethod = "POST"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = requestBody
-            
-            let postTask: URLSessionDataTask = self.session.dataTask(with: request) { data, response, error in
-                if let error = error {
-                    print("Error sending data: \(error)")
-                    completion(false)
-                } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
-                    print("Feature vector sent successfully.")
-                    completion(true)
-                } else {
-                    print("Unexpected server response: \(String(describing: response))")
-                    completion(false)
-                }
-            }
-            postTask.resume()
-        } catch {
-            print("Error serializing JSON: \(error)")
-            completion(false)
-        }
-    }
 }
-
-
-

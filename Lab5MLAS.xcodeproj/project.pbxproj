@@ -16,6 +16,7 @@
 		B67483E21ACA2D6800A9970E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B67483E11ACA2D6800A9970E /* Images.xcassets */; };
 		B67483E51ACA2D6800A9970E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B67483E31ACA2D6800A9970E /* LaunchScreen.xib */; };
 		B694B01A1FA377E4009A4277 /* RingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B694B0191FA377E4009A4277 /* RingBuffer.swift */; };
+		C72BEECB2CF6E90F00E86F47 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BEECA2CF6E90900E86F47 /* UIViewController+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		B67483E11ACA2D6800A9970E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B67483E41ACA2D6800A9970E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		B694B0191FA377E4009A4277 /* RingBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingBuffer.swift; sourceTree = "<group>"; };
+		C72BEECA2CF6E90900E86F47 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				170A246A2CF6406A00A9A1C5 /* QuizViewController.swift */,
 				170A24682CF63F7C00A9A1C5 /* HomeViewController.swift */,
 				17F419522CF45C2A0075CF9B /* TutorialViewController.swift */,
+				C72BEECA2CF6E90900E86F47 /* UIViewController+Extensions.swift */,
 				B67483E11ACA2D6800A9970E /* Images.xcassets */,
 				B67483E31ACA2D6800A9970E /* LaunchScreen.xib */,
 				B67483D81ACA2D6800A9970E /* Supporting Files */,
@@ -161,6 +164,7 @@
 				B67483DB1ACA2D6800A9970E /* AppDelegate.swift in Sources */,
 				17F419532CF45C2A0075CF9B /* TutorialViewController.swift in Sources */,
 				B6022E672C108DB400E2CC70 /* MlaasModel.swift in Sources */,
+				C72BEECB2CF6E90F00E86F47 /* UIViewController+Extensions.swift in Sources */,
 				B694B01A1FA377E4009A4277 /* RingBuffer.swift in Sources */,
 				170A24692CF63F7C00A9A1C5 /* HomeViewController.swift in Sources */,
 			);
@@ -300,15 +304,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = D9B6BU2J6A;
+				DEVELOPMENT_TEAM = FD7Y9YJKBW;
 				INFOPLIST_FILE = Lab5MLAS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "SMU.$(PRODUCT_NAME:rfc1034identifier)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = SMU.Lab5MLAS;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = Lab5MLAAS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -318,15 +321,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = D9B6BU2J6A;
+				DEVELOPMENT_TEAM = FD7Y9YJKBW;
 				INFOPLIST_FILE = Lab5MLAS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "SMU.$(PRODUCT_NAME:rfc1034identifier)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = SMU.Lab5MLAS;
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = Lab5MLAAS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
