@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="UAt-8T-0vB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="wg1-y6-iVE">
     <device id="retina6_3" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
@@ -30,17 +30,114 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mzz-AY-4yF">
+                                <rect key="frame" x="99" y="742" width="204" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" title="Take Quiz"/>
+                                <connections>
+                                    <segue destination="iF6-79-kL2" kind="push" id="uQx-OK-JYM"/>
+                                </connections>
+                            </button>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wAq-CS-73Q">
+                                <rect key="frame" x="16" y="624" width="370" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" id="Ki9-ZV-zHe"/>
                     <connections>
                         <outlet property="instructionsLabel" destination="8ip-is-tYQ" id="gX6-yo-2qv"/>
+                        <outlet property="progressLabel" destination="wAq-CS-73Q" id="Tl1-3w-C6a"/>
                         <outlet property="progressView" destination="K9O-z0-hS9" id="UPt-wk-fiI"/>
+                        <outlet property="quizButton" destination="Mzz-AY-4yF" id="oaM-QJ-348"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lke-6T-cc7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="135.82089552238804" y="135.92677345537757"/>
+            <point key="canvasLocation" x="1067.1641791044776" y="135.92677345537757"/>
+        </scene>
+        <!--Quiz View Controller-->
+        <scene sceneID="Nnj-OS-Gbn">
+            <objects>
+                <viewController storyboardIdentifier="QuizViewController" id="iF6-79-kL2" customClass="QuizViewController" customModule="Lab5MLAS" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="nGW-oM-9D6"/>
+                        <viewControllerLayoutGuide type="bottom" id="azG-tk-7jL"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="vW5-ey-2SJ">
+                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="fEH-gH-SLf"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1gR-Yx-p1X" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1819.4029850746267" y="135.92677345537757"/>
+        </scene>
+        <!--Home View Controller-->
+        <scene sceneID="qKY-R1-62O">
+            <objects>
+                <viewController storyboardIdentifier="HomeViewController" id="Yhm-Qa-Kef" customClass="HomeViewController" customModule="Lab5MLAS" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Prz-bd-kYY"/>
+                        <viewControllerLayoutGuide type="bottom" id="BMC-2G-4HK"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="fH0-RE-EhJ">
+                        <rect key="frame" x="0.0" y="0.0" width="402" height="874"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Welcome to Alif Ba Ta!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gVQ-wQ-BgB">
+                                <rect key="frame" x="16" y="146" width="370" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qKH-f6-xdj">
+                                <rect key="frame" x="145" y="419" width="112" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Tutorial"/>
+                                <connections>
+                                    <segue destination="UAt-8T-0vB" kind="push" id="5JP-Dk-Oz7"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Vpk-Tx-t5b"/>
+                    <connections>
+                        <outlet property="messageLabel" destination="gVQ-wQ-BgB" id="JJP-OL-vXQ"/>
+                        <outlet property="tutorialButton" destination="qKH-f6-xdj" id="T7l-ts-tvA"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="L27-bN-TWy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="305.97014925373134" y="135.92677345537757"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="X5T-93-U80">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="wg1-y6-iVE" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Koj-ub-lcW">
+                        <rect key="frame" x="0.0" y="62" width="402" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Yhm-Qa-Kef" kind="relationship" relationship="rootViewController" id="CJu-Gn-x07"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="B7F-Kt-psT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-613.43283582089543" y="135.92677345537757"/>
         </scene>
     </scenes>
     <resources>

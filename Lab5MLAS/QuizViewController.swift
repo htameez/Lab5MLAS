@@ -6,4 +6,7 @@
 //  Copyright © 2024 Eric Larson. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+class QuizViewController: UIViewController {
+}
