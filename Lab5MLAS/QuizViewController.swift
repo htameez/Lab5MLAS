@@ -31,11 +31,11 @@ class QuizViewController: UIViewController {
 
     // MARK: - Properties
     var arabicLettersMapping: [Int: String] = [
-        0: "ا", // Alif
-        1: "ب", // Ba
-        2: "ت", // Ta
-        3: "ث", // Tha
-        4: "ج"  // Jeem
+        0: "ا", 1: "ب", 2: "ت", 3: "ث", 4: "ج", 5: "ح", 6: "خ",
+        7: "د", 8: "ذ", 9: "ر", 10: "ز", 11: "س", 12: "ش",
+        13: "ص", 14: "ض", 15: "ط", 16: "ظ", 17: "ع", 18: "غ",
+        19: "ف", 20: "ق", 21: "ك", 22: "ل", 23: "م", 24: "ن",
+        25: "ه", 26: "و", 27: "ي"
     ]
 
     
@@ -127,7 +127,7 @@ class QuizViewController: UIViewController {
             print("Bounding box is not available")
             return
         }
-
+        
         // Capture the user-drawn image
         guard let capturedImage = viewToImage() else {
             showAlert(title: "Error", message: "Failed to capture drawing.")
@@ -140,27 +140,26 @@ class QuizViewController: UIViewController {
             return
         }
         
-        guard let grayscaleImage = self.convertToGrayscale(image: croppedImage) else {
-            print("Failed to convert image to grayscale")
-            return
-        }
-    
+        print("Captured and cropped image: \(croppedImage.size)")
+
         // Extract features from the cropped image
-        let features = extractFeatures(from: grayscaleImage)
-                
+        let features = extractFeatures(from: croppedImage)
+        print("Extracted Features: \(features)")
+        
         // Predict using the model
         client.predict(dsid: 1, feature: features) { result in
             DispatchQueue.main.async {
                 print("Result from prediction API: \(result)") // Log the entire result
-
+                
                 switch result {
                 case .success(let predictedLabel):
                     print("Raw predictedLabel: \(predictedLabel)") // Log raw predictedLabel
                     if let predictedInt = Int(predictedLabel), // Try converting to Int
                        let mappedLetter = self.arabicLettersMapping[predictedInt] {
+                        
                         print("Mapped letter: \(mappedLetter)")
                         self.quizResults.append((expected: self.currentLetter, predicted: mappedLetter))
-
+                        
                         // Show immediate feedback
                         if mappedLetter == self.currentLetter {
                             self.showAlert(title: "Correct!", message: "You wrote \(mappedLetter) correctly!")
@@ -217,34 +216,51 @@ class QuizViewController: UIViewController {
 
     func extractFeatures(from image: UIImage) -> [Double] {
         guard let cgImage = image.cgImage else {
-            print("Error: Could not extract CGImage.")
+            print("Error: CGImage is nil.")
             return []
         }
-        let width = Int(image.size.width)
-        let height = Int(image.size.height)
 
+        let targetWidth = 32
+        let targetHeight = 32
+        let pixelCount = targetWidth * targetHeight
+
+        // Ensure the image has the correct dimensions
+        if Int(image.size.width) != targetWidth || Int(image.size.height) != targetHeight {
+            print("Warning: Image dimensions are incorrect. Expected \(targetWidth)x\(targetHeight), got \(Int(image.size.width))x\(Int(image.size.height)).")
+            return []
+        }
+        
         // Create a buffer for grayscale pixel data
-        var pixelData = [UInt8](repeating: 0, count: width * height)
-
-    
+        var pixelData = [UInt8](repeating: 0, count: pixelCount)
         let colorSpace = CGColorSpaceCreateDeviceGray()
-        let context = CGContext(
+        guard let context = CGContext(
             data: &pixelData,
-            width: width,
-            height: height,
+            width: targetWidth,
+            height: targetHeight,
             bitsPerComponent: 8,
-            bytesPerRow: width,
+            bytesPerRow: targetWidth,
             space: colorSpace,
             bitmapInfo: CGImageAlphaInfo.none.rawValue
-        )
-        context?.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
-        
-        let features = pixelData.map { Double($0) / 255.0 }
-        if features.count != 1024 { 
-            print("Warning: Feature vector has incorrect length \(features.count).")
+        ) else {
+            print("Error: Could not create CGContext for feature extraction.")
+            return []
         }
+
+        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: targetWidth, height: targetHeight))
+
+        print("Pixel data count: \(pixelData.count), Expected: \(pixelCount)")
+        print("Raw pixel data: \(pixelData)")
+        
+        // Map pixel values to a normalized [0, 1] range
+        let features = pixelData.map { Double($0) }
+        if features.count != pixelCount {
+            print("Warning: Feature vector length is \(features.count), expected \(pixelCount).")
+        }
+        
+        print("Final feature vector: \(features)")
         return features
     }
+
 
 
     // MARK: - Clear
@@ -295,26 +311,6 @@ class QuizViewController: UIViewController {
         UIGraphicsEndImageContext()
         return image
     }
-
-    func convertToGrayscale(image: UIImage) -> UIImage? {
-        guard let cgImage = image.cgImage else { return nil }
-        let colorSpace = CGColorSpaceCreateDeviceGray()
-        let context = CGContext(
-            data: nil,
-            width: cgImage.width,
-            height: cgImage.height,
-            bitsPerComponent: 8,
-            bytesPerRow: cgImage.width,
-            space: colorSpace,
-            bitmapInfo: CGImageAlphaInfo.none.rawValue
-        )
-        context?.draw(cgImage, in: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height))
-        if let grayImage = context?.makeImage() {
-            return UIImage(cgImage: grayImage)
-        }
-        return nil
-    }
-
 
     func showAlert(title: String, message: String, completion: (() -> Void)? = nil) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)

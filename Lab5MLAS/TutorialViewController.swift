@@ -267,30 +267,48 @@ class TutorialViewController: UIViewController {
 
     func extractFeatures(from image: UIImage) -> [Double] {
         guard let cgImage = image.cgImage else {
-            print("Error: Could not extract CGImage.")
+            print("Error: CGImage is nil.")
             return []
         }
-        let width = Int(image.size.width)
-        let height = Int(image.size.height)
 
+        let targetWidth = 32
+        let targetHeight = 32
+        let pixelCount = targetWidth * targetHeight
+
+        // Ensure the image has the correct dimensions
+        if Int(image.size.width) != targetWidth || Int(image.size.height) != targetHeight {
+            print("Warning: Image dimensions are incorrect. Expected \(targetWidth)x\(targetHeight), got \(Int(image.size.width))x\(Int(image.size.height)).")
+            return []
+        }
+        
         // Create a buffer for grayscale pixel data
-        var pixelData = [UInt8](repeating: 0, count: width * height)
+        var pixelData = [UInt8](repeating: 0, count: pixelCount)
         let colorSpace = CGColorSpaceCreateDeviceGray()
-        let context = CGContext(
+        guard let context = CGContext(
             data: &pixelData,
-            width: width,
-            height: height,
+            width: targetWidth,
+            height: targetHeight,
             bitsPerComponent: 8,
-            bytesPerRow: width,
+            bytesPerRow: targetWidth,
             space: colorSpace,
             bitmapInfo: CGImageAlphaInfo.none.rawValue
-        )
-        context?.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
-        
-        let features = pixelData.map { Double($0) / 255.0 }
-        if features.count != 1024 {
-            print("Warning: Feature vector has incorrect length \(features.count).")
+        ) else {
+            print("Error: Could not create CGContext for feature extraction.")
+            return []
         }
+
+        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: targetWidth, height: targetHeight))
+
+        print("Pixel data count: \(pixelData.count), Expected: \(pixelCount)")
+        print("Raw pixel data: \(pixelData)")
+        
+        // Map pixel values to a normalized [0, 1] range
+        let features = pixelData.map { Double($0) }
+        if features.count != pixelCount {
+            print("Warning: Feature vector length is \(features.count), expected \(pixelCount).")
+        }
+        
+        print("Final feature vector: \(features)")
         return features
     }
 
@@ -326,17 +344,10 @@ class TutorialViewController: UIViewController {
             
             // Restore dashed lines after the image has been captured
             self.showDashedLines()
-
-            guard let grayscaleImage = self.convertToGrayscale(image: croppedImage) else {
-                print("Failed to convert image to grayscale")
-                return
-            }
             
-            // Extract features from the cropped image
-            let features = self.extractFeatures(from: grayscaleImage)
-            
+            // Extract features from the cropped image directly
+            let features = self.extractFeatures(from: croppedImage)
             print("Extracted features: \(features)")
-
 
             // Save the features and label to the tutorial data
             let label = self.arabicLetters[self.currentLetterIndex]
@@ -512,26 +523,6 @@ class TutorialViewController: UIViewController {
         }
     }
     
-    func convertToGrayscale(image: UIImage) -> UIImage? {
-        guard let cgImage = image.cgImage else { return nil }
-        let colorSpace = CGColorSpaceCreateDeviceGray()
-        let context = CGContext(
-            data: nil,
-            width: cgImage.width,
-            height: cgImage.height,
-            bitsPerComponent: 8,
-            bytesPerRow: cgImage.width,
-            space: colorSpace,
-            bitmapInfo: CGImageAlphaInfo.none.rawValue
-        )
-        context?.draw(cgImage, in: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height))
-        if let grayImage = context?.makeImage() {
-            return UIImage(cgImage: grayImage)
-        }
-        return nil
-    }
-
-
 
     func showAlert(title: String, message: String, completion: (() -> Void)? = nil) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)

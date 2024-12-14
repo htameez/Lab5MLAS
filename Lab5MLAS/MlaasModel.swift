@@ -116,7 +116,6 @@ class MlaasModel: NSObject, URLSessionDelegate {
     }
 
 
-    // MARK: - Predict with XGBoost
     func predict(dsid: Int, feature: [Double], completion: @escaping (Result<String, Error>) -> Void) {
         let baseURL = "http://\(server_ip):8000/predict/"
         guard let url = URL(string: baseURL) else {
@@ -128,14 +127,20 @@ class MlaasModel: NSObject, URLSessionDelegate {
         request.httpMethod = RequestEnum.post.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        let payload: [String: Any] = [
-            "dsid": dsid,
-            "feature": feature
-        ]
+        let payload: [String: Any] = ["feature": feature, "dsid": dsid]
 
+        // **Debugging: Log feature vector before serialization**
+        print("Feature vector before serialization: \(feature)")
+        print("Payload to send: \(payload)")
+
+        // Serialize JSON payload
         do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: payload)
+            let jsonData = try JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted)
+            request.httpBody = jsonData
+            // **Debugging: Log serialized JSON**
+            print("Serialized JSON: \(String(data: jsonData, encoding: .utf8) ?? "Invalid JSON")")
         } catch {
+            print("Error serializing JSON payload: \(error)")
             completion(.failure(error))
             return
         }
@@ -150,22 +155,30 @@ class MlaasModel: NSObject, URLSessionDelegate {
                 completion(.failure(NetworkError.serverError))
                 return
             }
-            
-            // Log raw response data
-                if let jsonString = String(data: data, encoding: .utf8) {
-                    print("Raw server response: \(jsonString)")
-                }
 
+            // **Debugging: Log raw server response**
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("Raw server response: \(jsonString)")
+            }
+
+            // Validate HTTP response
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+                print("HTTP Error: \(httpResponse.statusCode)")
+                completion(.failure(NetworkError.serverError))
+                return
+            }
+
+            // Parse JSON response
             do {
-                // Parse the response JSON
                 if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                   let prediction = json["prediction"] as? Int {  // Change this to Int
-                    completion(.success(String(prediction)))       // Convert Int to String
+                   let prediction = json["prediction"] as? Int {
+                    completion(.success(String(prediction)))
                 } else {
                     print("Invalid JSON structure: \(String(data: data, encoding: .utf8) ?? "Unknown")")
                     completion(.failure(NetworkError.serverError))
                 }
             } catch {
+                print("Error parsing JSON: \(error)")
                 completion(.failure(error))
             }
         }
