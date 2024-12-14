@@ -9,7 +9,7 @@
 import UIKit
 
 class TutorialViewController: UIViewController {
-    
+
     // MARK: - Properties
     var touchCoordinates = [(x: Double, y: Double)]()
     let arabicLetters = ["ا", "ب", "ت", "ث", "ج"] // Example letters
@@ -17,254 +17,531 @@ class TutorialViewController: UIViewController {
     var drawnPath = UIBezierPath() // Path for user's drawing
     var drawnLayer = CAShapeLayer() // Layer for the user's drawing
     var tutorialData: [(features: [Double], label: String)] = [] // Collected tutorial data
-    
+    var isAnimatingText = false
+
+
     var dashSegments: [(path: UIBezierPath, layer: CAShapeLayer)] = [] // Individual dash segments
-    var tracedDashes: [Bool] = [] // Track which dashes are traced
-    let proximityThreshold: CGFloat = 10.0 // Leeway for tracing accuracy
-    
+
+    var boundingBoxLayer = CAShapeLayer()
+
     @IBOutlet weak var instructionsLabel: UILabel!
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var progressLabel: UILabel!
-    
-    // Instance of MlaasModel
+    @IBOutlet weak var submitButton: UIButton!
+    @IBOutlet weak var clearButton: UIButton!
+
     let client = MlaasModel()
-    
+
     // MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = .black
+
         // Configure the user's drawing layer
-        drawnLayer.strokeColor = UIColor.red.cgColor
-        drawnLayer.lineWidth = 5.0
-        drawnLayer.fillColor = UIColor.clear.cgColor
-        view.layer.addSublayer(drawnLayer)
-        
-        // Initialize the progress bar
+        setupDrawingLayer()
+        setupBoundingBox()
+
         progressView.progress = 0.0
-        
+        progressLabel.isHidden = true
+        submitButton.isEnabled = false
+        clearButton.isEnabled = false
         loadNextLetter()
     }
-    
-    func loadNextLetter() {
-        resetDrawing()
+
+    func setupDrawingLayer() {
+        drawnLayer.strokeColor = UIColor.white.cgColor
+        drawnLayer.lineWidth = 19.0
+        drawnLayer.fillColor = UIColor.clear.cgColor
+
+        // Ensure drawnLayer is only added once and stays in place
+        if !view.layer.sublayers!.contains(drawnLayer) {
+            view.layer.addSublayer(drawnLayer)
+        }
         
-        if currentLetterIndex < arabicLetters.count {
-            instructionsLabel.text = "Trace the letter: \(arabicLetters[currentLetterIndex])"
-            createLetterPath(for: arabicLetters[currentLetterIndex])
-            
-            // Update progress bar for current letter
-            progressView.progress = Float(currentLetterIndex) / Float(arabicLetters.count)
-        } else {
-            // Tutorial complete, progress bar should show full progress
-            progressView.progress = 1.0
-            
-            UserDefaults.standard.set(true, forKey: "HasCompletedTutorial")
-            
-            // prepare for the next action
-            DispatchQueue.main.async {
-                // Perform navigation back to the home screen
-                self.navigationController?.popViewController(animated: true) // This will go back to the previous screen (HomeScreen)
-            }
-            
-            let selectedModel = UserDefaults.standard.string(forKey: "SelectedModelType") ?? "KNN"
-            client.prepareUserDataAndProcess(dsid: 1, dataPath: "/Users/zareenahmurad/Desktop/CS/CS5323/Lab5Python/datasets/userdata") { [weak self] success, errorMessage in
-                DispatchQueue.main.async {
-                    if success {
-                        print("Tutorial data processed and uploaded. Training the model...")
-                        self?.updateProgressLabel(with: "Tutorial data processed and uploaded. Training the model...")
-                        
-                        // Train the model
-                        self?.client.trainModel(dsid: 1, modelType: selectedModel) { result in
-                            DispatchQueue.main.async {
-                                switch result {
-                                case .success:
-                                    print("Model trained successfully.")
-                                    self?.updateProgressLabel(with: "Model trained successfully.")
-                                case .failure(let error):
-                                    print("Training Failed: \(error.localizedDescription)")
-                                    self?.updateProgressLabel(with: "Training Failed: \(error.localizedDescription)")
-                                    self?.showAlert(title: "Training Failed", message: error.localizedDescription)
-                                }
-                            }
-                        }
-                    } else {
-                        // Handle failure if the tutorial data was not processed successfully
-                        let errorMessage = errorMessage ?? "Unknown error"
-                        self?.updateProgressLabel(with: errorMessage)
-                        self?.showAlert(title: "Data Preparation Failed", message: errorMessage)
-                    }
-                }
-            }
+        // Bring the drawnLayer to the front
+        view.layer.insertSublayer(drawnLayer, at: UInt32(view.layer.sublayers?.count ?? 0))
+        
+    }
+
+    func setupBoundingBox() {
+        let boxWidth: CGFloat = 300 // Adjust width
+        let boxHeight: CGFloat = 300 // Adjust height
+        let centerX = view.bounds.midX
+        let centerY = view.bounds.midY
+
+        // Create the bounding box
+        let boundingBox = CGRect(x: centerX - boxWidth / 2, y: centerY - boxHeight / 2, width: boxWidth, height: boxHeight)
+        boundingBoxLayer.path = UIBezierPath(rect: boundingBox).cgPath
+        boundingBoxLayer.strokeColor = UIColor.blue.cgColor
+        boundingBoxLayer.lineWidth = 2.0
+        boundingBoxLayer.fillColor = UIColor.clear.cgColor
+
+        // Add the bounding box back to the view after clearing other layers
+        if view.layer.sublayers?.contains(boundingBoxLayer) == false {
+            view.layer.addSublayer(boundingBoxLayer)
         }
     }
-    
+
+    func createLetterPath(for letter: String) {
+        // Clear previous dashed lines
+        for segment in dashSegments {
+            segment.layer.removeFromSuperlayer()
+        }
+        dashSegments.removeAll()
+
+        switch letter {
+        case "ا":
+            let centerX = view.bounds.midX
+            let centerY = view.bounds.midY
+            let verticalOffset: CGFloat = -20
+            createDashedLine(
+                from: CGPoint(x: centerX, y: centerY + verticalOffset - 100),
+                to: CGPoint(x: centerX, y: centerY + verticalOffset + 100)
+            )
+        case "ب":
+            createDashedCurve(from: CGPoint(x: 100, y: 360), to: CGPoint(x: 300, y: 360),
+                                controlPoint1: CGPoint(x: 50, y: 456), controlPoint2: CGPoint(x: 350, y: 456))
+            createDot(at: CGPoint(x: 200, y: 480))
+        case "ت":
+            createDashedCurve(from: CGPoint(x: 100, y: 380), to: CGPoint(x: 300, y: 380),
+                                  controlPoint1: CGPoint(x: 50, y: 476), controlPoint2: CGPoint(x: 350, y: 476))
+            createDot(at: CGPoint(x: 180, y: 350))
+            createDot(at: CGPoint(x: 220, y: 350))
+        case "ث":
+            createDashedCurve(from: CGPoint(x: 100, y: 380), to: CGPoint(x: 300, y: 380),
+                                  controlPoint1: CGPoint(x: 50, y: 476), controlPoint2: CGPoint(x: 350, y: 476))
+            createDot(at: CGPoint(x: 180, y: 355))
+            createDot(at: CGPoint(x: 220, y: 355))
+            createDot(at: CGPoint(x: 200, y: 335))
+        case "ج":
+            createDashedCurve(
+                from: CGPoint(x: 139, y: 348),
+                to: CGPoint(x: 254, y: 341),
+                controlPoint1: CGPoint(x: 193, y: 289),
+                controlPoint2: CGPoint(x: 192, y: 378)
+            )
+            createDashedCurve(
+                from: CGPoint(x: 254, y: 341),
+                to: CGPoint(x: 254, y: 471),
+                controlPoint1: CGPoint(x: 117, y: 365),
+                controlPoint2: CGPoint(x: 117, y: 527)
+            )
+            createDot(at: CGPoint(x: 208, y: 428))
+        default:
+            break
+        }
+    }
+
+    func createDashedLine(from start: CGPoint, to end: CGPoint) {
+        let segment = UIBezierPath()
+        segment.move(to: start)
+        segment.addLine(to: end)
+
+        let layer = createDashedLayer(for: segment)
+        dashSegments.append((path: segment, layer: layer))
+    }
+
+    func createDashedCurve(from start: CGPoint, to end: CGPoint, controlPoint1: CGPoint, controlPoint2: CGPoint) {
+        let curve = UIBezierPath()
+        curve.move(to: start)
+        curve.addCurve(to: end, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
+
+        let layer = createDashedLayer(for: curve)
+        dashSegments.append((path: curve, layer: layer))
+    }
+
+    func createDot(at point: CGPoint) {
+        let dot = UIBezierPath()
+        dot.addArc(withCenter: point, radius: 6.0, startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: true)
+
+        let layer = CAShapeLayer()
+        layer.path = dot.cgPath
+        layer.strokeColor = UIColor.label.cgColor
+        layer.fillColor = UIColor.label.cgColor
+        view.layer.addSublayer(layer)
+        
+        view.layer.insertSublayer(drawnLayer, at: UInt32(view.layer.sublayers?.count ?? 0))
+    }
+
+    func createDashedLayer(for path: UIBezierPath) -> CAShapeLayer {
+        let dashedLayer = CAShapeLayer()
+        dashedLayer.path = path.cgPath
+        dashedLayer.strokeColor = UIColor.label.cgColor
+        dashedLayer.lineWidth = 9.0
+        dashedLayer.lineDashPattern = [8, 4]
+        dashedLayer.fillColor = UIColor.clear.cgColor
+        view.layer.addSublayer(dashedLayer)
+        
+        view.layer.insertSublayer(drawnLayer, above: dashedLayer)
+
+        return dashedLayer
+    }
+
+    func loadNextLetter() {
+        submitButton.isEnabled = false
+        if currentLetterIndex < arabicLetters.count {
+            resetDrawing()
+            instructionsLabel.text = "Trace the letter: \(arabicLetters[currentLetterIndex])"
+            createLetterPath(for: arabicLetters[currentLetterIndex])
+            progressView.progress = Float(currentLetterIndex) / Float(arabicLetters.count)
+        } else {
+            progressView.progress = 1.0
+            fadeInLabel(progressLabel)
+            typewriterEffect(progressLabel, text: "Learning your handwriting style...", characterDelay: 0.1)
+            progressLabel.isHidden = false
+            handleTutorialCompletion()
+        }
+    }
+
     func resetDrawing() {
+        // Clear the drawn path
         drawnPath = UIBezierPath()
         touchCoordinates.removeAll()
         drawnLayer.path = nil
-        dashSegments.forEach { $0.layer.removeFromSuperlayer() } // Remove existing dash layers
+        
+        // Remove all dashed line layers
+        for segment in dashSegments {
+            segment.layer.removeFromSuperlayer()
+        }
         dashSegments.removeAll()
-        tracedDashes.removeAll()
+
+        // Remove all sublayers (this includes the dots and other shape layers)
+        for layer in view.layer.sublayers ?? [] {
+            if let shapeLayer = layer as? CAShapeLayer, shapeLayer != drawnLayer {
+                shapeLayer.removeFromSuperlayer()  // Keep drawnLayer intact
+            }
+        }
+
+        // Recreate the bounding box to ensure it stays visible
+        setupBoundingBox()
+
+        // Reset button states
+        submitButton.isEnabled = false
+        clearButton.isEnabled = false
     }
-    
-    // MARK: - Data Collection
+
+
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let point = touch.location(in: self.view)
         drawnPath.move(to: point)
     }
-    
+
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let point = touch.location(in: self.view)
-        drawnPath.addLine(to: point)
-        drawnLayer.path = drawnPath.cgPath
-        
-        for (index, segment) in dashSegments.enumerated() where !tracedDashes[index] {
-            if isPointCloseToPath(point, path: segment.path) {
-                tracedDashes[index] = true
-                markDashAsTraced(index: index)
+
+        // Ensure the point is inside the bounding box before adding it to the path
+        if let boundingBoxPath = boundingBoxLayer.path, boundingBoxPath.contains(point) {
+            // Add to the drawn path
+            drawnPath.addLine(to: point)
+            
+            // Update the drawn layer with the new path
+            drawnLayer.path = drawnPath.cgPath
+            
+            // Append the coordinates for future use
+            touchCoordinates.append((x: Double(point.x), y: Double(point.y)))
+
+            // Enable buttons after drawing starts
+            if !submitButton.isEnabled {
+                submitButton.isEnabled = true
+                clearButton.isEnabled = true
             }
         }
     }
     
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if tracedDashes.allSatisfy({ $0 }) {
-            // Save the drawing as a PNG file and upload it
-            saveDrawingAsPNG()
-            
-            // Move to the next letter
-            currentLetterIndex += 1
-            
-            // Update progress bar
-            progressView.progress = Float(currentLetterIndex) / Float(arabicLetters.count)
-            
-            loadNextLetter()
+    func viewToImage() -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 0.0)
+        if let context = UIGraphicsGetCurrentContext() {
+            // Fill the entire context with black color
+            context.setFillColor(UIColor.black.cgColor)
+            context.fill(view.bounds)
         }
-    }
-    
-    // MARK: - Save Drawing as PNG
-    func saveDrawingAsPNG() {
-        let size = CGSize(width: 32, height: 32)
-        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
-        let scaleTransform = CGAffineTransform(scaleX: size.width / view.bounds.width,
-                                               y: size.height / view.bounds.height)
-        drawnPath.apply(scaleTransform)
-        drawnPath.stroke()
+        view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        drawnPath.apply(scaleTransform.inverted())
+        return image
+    }
+
+    func extractFeatures(from image: UIImage) -> [Double] {
+        guard let cgImage = image.cgImage else {
+            print("Error: Could not extract CGImage.")
+            return []
+        }
+        let width = Int(image.size.width)
+        let height = Int(image.size.height)
+
+        // Create a buffer for grayscale pixel data
+        var pixelData = [UInt8](repeating: 0, count: width * height)
+        let colorSpace = CGColorSpaceCreateDeviceGray()
+        let context = CGContext(
+            data: &pixelData,
+            width: width,
+            height: height,
+            bitsPerComponent: 8,
+            bytesPerRow: width,
+            space: colorSpace,
+            bitmapInfo: CGImageAlphaInfo.none.rawValue
+        )
+        context?.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
         
-        if let pngData = image?.pngData() {
-            let filename = "id_\(currentLetterIndex)_label_\(currentLetterIndex + 1).png"
-            client.uploadPNG(data: pngData, filename: filename) { success, error in
+        let features = pixelData.map { Double($0) / 255.0 }
+        if features.count != 1024 {
+            print("Warning: Feature vector has incorrect length \(features.count).")
+        }
+        return features
+    }
+
+
+
+    @IBAction func submitButtonTapped(_ sender: UIButton) {
+        guard let boundingBox = boundingBoxLayer.path?.boundingBox else {
+            print("Bounding box is not available")
+            return
+        }
+        
+        hideDashedLines()
+        
+        // Add a short delay so dashed lines are fully hidden before capturing png
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            // Capture the user-drawn image from the view
+            guard let capturedImage = self.viewToImage() else {
+                print("Failed to capture image")
+                // Restore dashed lines if capturing fails
+                self.showDashedLines()
+                return
+            }
+
+            // Crop the image to the bounding box
+            guard let croppedImage = self.cropImageToBoundingBox(capturedImage, boundingBox: boundingBox) else {
+                print("Failed to crop image to bounding box")
+                // Restore dashed lines if cropping fails
+                self.showDashedLines()
+                return
+            }
+            
+            print("Cropped image dimensions: \(croppedImage.size)")
+            
+            // Restore dashed lines after the image has been captured
+            self.showDashedLines()
+
+            guard let grayscaleImage = self.convertToGrayscale(image: croppedImage) else {
+                print("Failed to convert image to grayscale")
+                return
+            }
+            
+            // Extract features from the cropped image
+            let features = self.extractFeatures(from: grayscaleImage)
+            
+            print("Extracted features: \(features)")
+
+
+            // Save the features and label to the tutorial data
+            let label = self.arabicLetters[self.currentLetterIndex]
+            self.tutorialData.append((features: features, label: label))
+
+            // Upload the cropped image to the server
+            let filename = "user_letter_\(self.currentLetterIndex).png"
+            self.client.uploadPNG(image: croppedImage, filename: filename) { success, error in
+                DispatchQueue.main.async {
+                    if success {
+                        print("Successfully uploaded cropped image for letter \(label)")
+                    } else {
+                        print("Failed to upload cropped image for letter \(label): \(error ?? "Unknown error")")
+                        self.showAlert(title: "Upload Failed", message: error ?? "Unknown error")
+                    }
+                }
+            }
+
+            // Proceed to the next letter
+            self.currentLetterIndex += 1
+            self.loadNextLetter()
+        }
+    }
+
+
+    func cropImageToBoundingBox(_ image: UIImage, boundingBox: CGRect) -> UIImage? {
+        // Adjust the bounding box to slightly crop inside the green border
+        let scale = UIScreen.main.scale
+        let margin: CGFloat = 2.0 // Adjust this to fine-tune how much inside the border you crop
+        let scaledBoundingBox = CGRect(
+            x: (boundingBox.origin.x + margin) * scale,
+            y: (boundingBox.origin.y + margin) * scale,
+            width: (boundingBox.width - 2 * margin) * scale,
+            height: (boundingBox.height - 2 * margin) * scale
+        )
+
+        // Ensure the bounding box is within the image bounds
+        guard let cgImage = image.cgImage,
+              let croppedCGImage = cgImage.cropping(to: scaledBoundingBox) else {
+            print("Failed to crop image to bounding box")
+            return nil
+        }
+
+        let targetSize = CGSize(width: 32, height: 32)
+        UIGraphicsBeginImageContextWithOptions(targetSize, false, 1.0)
+        UIImage(cgImage: croppedCGImage).draw(in: CGRect(origin: .zero, size: targetSize))
+        let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return resizedImage
+    }
+
+    @IBAction func clearButtonTapped(_ sender: UIButton) {
+        drawnPath = UIBezierPath()
+        touchCoordinates.removeAll()
+        drawnLayer.path = nil
+        submitButton.isEnabled = false
+        clearButton.isEnabled = false
+    }
+
+    func showPostTutorialOptions() {
+        let alert = UIAlertController(title: "Tutorial Complete", message: "What would you like to do next?", preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: "Learn Again", style: .default, handler: { _ in
+            self.restartTutorial()
+        }))
+
+        alert.addAction(UIAlertAction(title: "Take Quiz", style: .default, handler: { _ in
+            self.navigateToQuiz()
+        }))
+
+        alert.addAction(UIAlertAction(title: "Go Home", style: .cancel, handler: { _ in
+            self.navigationController?.popToRootViewController(animated: true)
+        }))
+
+        self.present(alert, animated: true)
+    }
+
+    func navigateToQuiz() {
+        if let quizViewController = storyboard?.instantiateViewController(withIdentifier: "QuizViewController") {
+            navigationController?.pushViewController(quizViewController, animated: true)
+        }
+    }
+
+    func restartTutorial() {
+        currentLetterIndex = 0
+        progressView.progress = 0.0
+        progressLabel.text = ""
+        loadNextLetter()
+    }
+
+    func handleTutorialCompletion() {
+        // Update the UI to indicate progress
+        progressView.isHidden = true
+        submitButton.isEnabled = false
+        clearButton.isEnabled = false
+        progressLabel.isHidden = false
+        
+        fadeInLabel(progressLabel)
+        typewriterEffect(progressLabel, text: "Learning your handwriting style...", characterDelay: 0.1)
+       
+        // Step 1: Prepare user data
+        client.prepareUserDataAndUpload(tutorialData: tutorialData, dsid: 1) { success, error in
+            DispatchQueue.main.async {
                 if success {
-                    print("Successfully uploaded \(filename) to the server.")
+                    print("Data uploaded successfully. Training model...")
+
+                    // Step 2: Train the model after successful upload
+                    self.trainModelForDsid(1)
                 } else {
-                    print("Error uploading \(filename): \(error ?? "Unknown error")")
+                    // Handle upload failure
+                    print("Failed to upload user data: \(error ?? "Unknown error")")
+                    self.showAlert(title: "Data Upload Failed", message: error ?? "Unknown error")
                 }
             }
         }
     }
-    
-    // MARK: - Helper Methods
-    
-    func createLetterPath(for letter: String) {
-            switch letter {
-            case "ا":
-                createDashedLine(from: CGPoint(x: 150, y: 200), to: CGPoint(x: 150, y: 400))
-            case "ب":
-                createDashedCurve(from: CGPoint(x: 70, y: 360), to: CGPoint(x: 350, y: 360),
-                                  controlPoint1: CGPoint(x: 33, y: 456), controlPoint2: CGPoint(x: 379, y: 456))
-                createDot(at: CGPoint(x: 200, y: 480))
-            case "ت":
-                createDashedCurve(from: CGPoint(x: 70, y: 360), to: CGPoint(x: 350, y: 360),
-                                  controlPoint1: CGPoint(x: 33, y: 456), controlPoint2: CGPoint(x: 379, y: 456))
-                createDot(at: CGPoint(x: 180, y: 300))
-                createDot(at: CGPoint(x: 220, y: 300))
-            case "ث":
-                createDashedCurve(from: CGPoint(x: 70, y: 360), to: CGPoint(x: 350, y: 360),
-                                  controlPoint1: CGPoint(x: 33, y: 456), controlPoint2: CGPoint(x: 379, y: 456))
-                createDot(at: CGPoint(x: 190, y: 340))
-                createDot(at: CGPoint(x: 230, y: 340))
-                createDot(at: CGPoint(x: 210, y: 320))
-            case "ج":
-                createDashedCurve(from: CGPoint(x: 139, y: 278), to: CGPoint(x: 254, y: 271),
-                                  controlPoint1: CGPoint(x: 193, y: 219), controlPoint2: CGPoint(x: 192, y: 328))
-                createDashedCurve(from: CGPoint(x: 254, y: 271), to: CGPoint(x: 297, y: 421),
-                                  controlPoint1: CGPoint(x: 117, y: 305), controlPoint2: CGPoint(x: 117, y: 487))
-                createDot(at: CGPoint(x: 190, y: 340))
-            default:
-                break
+
+
+    // Function to handle model training
+    private func trainModelForDsid(_ dsid: Int) {
+        self.client.trainModel(dsid: dsid) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    print("Model trained successfully.")
+                    self.progressLabel.text = "Model trained successfully!"
+                    self.showPostTutorialOptions()
+                case .failure(let error):
+                    print("Model training failed: \(error.localizedDescription)")
+                    self.showAlert(title: "Training Failed", message: error.localizedDescription)
+                }
             }
         }
-    
-    func createDashedLine(from start: CGPoint, to end: CGPoint) {
-        let segment = UIBezierPath()
-        segment.move(to: start)
-        segment.addLine(to: end)
-        
-        let layer = createDashedLayer(for: segment)
-        dashSegments.append((path: segment, layer: layer))
-        tracedDashes.append(false)
+    }
+
+    func hideDashedLines() {
+        for segment in dashSegments {
+            segment.layer.isHidden = true
+        }
+    }
+
+    func showDashedLines() {
+        for segment in dashSegments {
+            segment.layer.isHidden = false
+        }
     }
     
-    func createDashedCurve(from start: CGPoint, to end: CGPoint, controlPoint1: CGPoint, controlPoint2: CGPoint) {
-        let curve = UIBezierPath()
-        curve.move(to: start)
-        curve.addCurve(to: end, controlPoint1: controlPoint1, controlPoint2: controlPoint2)
-        
-        let layer = createDashedLayer(for: curve)
-        dashSegments.append((path: curve, layer: layer))
-        tracedDashes.append(false)
+
+    func typewriterEffect(_ label: UILabel, text: String, characterDelay: TimeInterval) {
+        guard !isAnimatingText else { return } // Prevent overlapping animations
+        isAnimatingText = true
+
+        label.text = ""
+        var charIndex = 0.0
+        for letter in text {
+            DispatchQueue.main.asyncAfter(deadline: .now() + charIndex * characterDelay) {
+                DispatchQueue.main.async {
+                    label.text?.append(letter)
+                    if charIndex == Double(text.count - 1) {
+                        self.isAnimatingText = false // Reset flag when done
+                    }
+                }
+            }
+            charIndex += 1
+        }
     }
     
-    func createDot(at point: CGPoint) {
-        let dot = UIBezierPath()
-        dot.addArc(withCenter: point, radius: 5.0, startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: true)
-        
-        let layer = CAShapeLayer()
-        layer.path = dot.cgPath
-        layer.strokeColor = UIColor.label.cgColor
-        layer.fillColor = UIColor.label.cgColor
-        layer.lineWidth = 1.0
-        view.layer.addSublayer(layer)
-        
-        dashSegments.append((path: dot, layer: layer))
-        tracedDashes.append(false)
+    func fadeInLabel(_ label: UILabel, duration: TimeInterval = 1.0) {
+        label.alpha = 0.0
+        UIView.animate(withDuration: duration) {
+            label.alpha = 1.0
+        }
     }
     
-    func createDashedLayer(for path: UIBezierPath) -> CAShapeLayer {
-        let dashedLayer = CAShapeLayer()
-        dashedLayer.path = path.cgPath
-        dashedLayer.strokeColor = UIColor.label.cgColor
-        dashedLayer.lineWidth = 5.0
-        dashedLayer.lineDashPattern = [8, 4] // Dash and gap lengths
-        dashedLayer.fillColor = UIColor.clear.cgColor
-        view.layer.addSublayer(dashedLayer)
-        
-        return dashedLayer
+    func convertToGrayscale(image: UIImage) -> UIImage? {
+        guard let cgImage = image.cgImage else { return nil }
+        let colorSpace = CGColorSpaceCreateDeviceGray()
+        let context = CGContext(
+            data: nil,
+            width: cgImage.width,
+            height: cgImage.height,
+            bitsPerComponent: 8,
+            bytesPerRow: cgImage.width,
+            space: colorSpace,
+            bitmapInfo: CGImageAlphaInfo.none.rawValue
+        )
+        context?.draw(cgImage, in: CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height))
+        if let grayImage = context?.makeImage() {
+            return UIImage(cgImage: grayImage)
+        }
+        return nil
     }
-    
-    func markDashAsTraced(index: Int) {
-        let dashLayer = dashSegments[index].layer
-        dashLayer.strokeColor = UIColor.green.cgColor
+
+
+
+    func showAlert(title: String, message: String, completion: (() -> Void)? = nil) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in completion?() }))
+        present(alert, animated: true)
     }
-    
-    func isPointCloseToPath(_ point: CGPoint, path: UIBezierPath) -> Bool {
-        let pathBounds = path.cgPath.boundingBox.insetBy(dx: -proximityThreshold, dy: -proximityThreshold)
-        return pathBounds.contains(point)
-    }
-    
-    private func updateProgressLabel(with text: String) {
-        UIView.transition(with: progressLabel,
-                          duration: 0.5,
-                          options: .transitionCrossDissolve,
-                          animations: { [weak self] in
-            self?.progressLabel.text = text
-            self?.progressLabel.isHidden = false
-        },
-                          completion: nil)
-    }
-    
 }
+
+
+
+   
+
+    
