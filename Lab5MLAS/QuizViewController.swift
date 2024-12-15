@@ -109,6 +109,7 @@ class QuizViewController: UIViewController {
         guard let touch = touches.first else { return }
         let point = touch.location(in: self.view)
 
+        // Ensure the point is within the bounding box
         if let boundingBoxPath = boundingBoxLayer.path, boundingBoxPath.contains(point) {
             drawnPath.addLine(to: point)
             drawnLayer.path = drawnPath.cgPath
@@ -118,8 +119,11 @@ class QuizViewController: UIViewController {
                 submitButton.isEnabled = true
                 clearButton.isEnabled = true
             }
+        } else {
+            print("Touch point is outside the bounding box:", point)
         }
     }
+
 
     // MARK: - Submit
     @IBAction func submitButtonPressed(_ sender: UIButton) {
@@ -188,7 +192,9 @@ class QuizViewController: UIViewController {
 
     
     func cropImageToBoundingBox(_ image: UIImage, boundingBox: CGRect) -> UIImage? {
-        // Adjust the bounding box to slightly crop inside the green border
+        // Log bounding box dimensions
+        print("Original Bounding Box:", boundingBox)
+
         let scale = UIScreen.main.scale
         let margin: CGFloat = 2.0
         let scaledBoundingBox = CGRect(
@@ -197,14 +203,27 @@ class QuizViewController: UIViewController {
             width: (boundingBox.width - 2 * margin) * scale,
             height: (boundingBox.height - 2 * margin) * scale
         )
-        
+
+        // Log scaled bounding box dimensions
+        print("Scaled Bounding Box:", scaledBoundingBox)
+        print("Image Size:", image.size)
+
         // Ensure the bounding box is within the image bounds
         guard let cgImage = image.cgImage,
-              let croppedCGImage = cgImage.cropping(to: scaledBoundingBox) else {
+              scaledBoundingBox.origin.x >= 0,
+              scaledBoundingBox.origin.y >= 0,
+              scaledBoundingBox.maxX <= CGFloat(cgImage.width),
+              scaledBoundingBox.maxY <= CGFloat(cgImage.height) else {
+            print("Error: Scaled bounding box is out of image bounds")
+            return nil
+        }
+
+        guard let croppedCGImage = cgImage.cropping(to: scaledBoundingBox) else {
             print("Failed to crop image to bounding box")
             return nil
         }
 
+        // Resize the cropped image to 32x32
         let targetSize = CGSize(width: 32, height: 32)
         UIGraphicsBeginImageContextWithOptions(targetSize, false, 1.0)
         UIImage(cgImage: croppedCGImage).draw(in: CGRect(origin: .zero, size: targetSize))
@@ -213,6 +232,7 @@ class QuizViewController: UIViewController {
 
         return resizedImage
     }
+
 
     func extractFeatures(from image: UIImage) -> [Double] {
         guard let cgImage = image.cgImage else {
@@ -299,16 +319,21 @@ class QuizViewController: UIViewController {
     }
 
     func viewToImage() -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 1.0)
+        UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, UIScreen.main.scale)
         if let context = UIGraphicsGetCurrentContext() {
-            // Fill the context with black
+            // Fill with black
             context.setFillColor(UIColor.black.cgColor)
             context.fill(view.bounds)
         }
-        // Draw the view hierarchy over the black background
         view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
+
+        if let image = image {
+            print("Captured Image Size:", image.size)
+        } else {
+            print("Error: Failed to capture the image from the view")
+        }
         return image
     }
 

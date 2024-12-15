@@ -7,6 +7,13 @@
 //
 
 import UIKit
+import AVFoundation
+
+extension Array {
+    subscript(safe index: Int) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
+}
 
 class TutorialViewController: UIViewController {
 
@@ -18,17 +25,21 @@ class TutorialViewController: UIViewController {
     var drawnLayer = CAShapeLayer() // Layer for the user's drawing
     var tutorialData: [(features: [Double], label: String)] = [] // Collected tutorial data
     var isAnimatingText = false
-
+    var audioPlayer: AVAudioPlayer? // Audio player for letter sounds
+    let letterSounds = ["ا": "Alif.wav", "ب": "Ba.wav", "ت": "Ta.wav", "ث": "Sa.wav", "ج": "Jeem.wav"] // Map letters to .wav files
 
     var dashSegments: [(path: UIBezierPath, layer: CAShapeLayer)] = [] // Individual dash segments
 
     var boundingBoxLayer = CAShapeLayer()
 
-    @IBOutlet weak var instructionsLabel: UILabel!
-    @IBOutlet weak var progressView: UIProgressView!
-    @IBOutlet weak var progressLabel: UILabel!
-    @IBOutlet weak var submitButton: UIButton!
-    @IBOutlet weak var clearButton: UIButton!
+    private let instructionsLabel = UILabel()
+    private let progressView = UIProgressView(progressViewStyle: .default)
+    private let progressLabel = UILabel()
+    private let submitButton = UIButton(type: .system)
+    private let clearButton = UIButton(type: .system)
+    private let playSoundButton = UIButton(type: .system) // Button to play the sound
+    private let activityIndicator = UIActivityIndicatorView(style: .medium)
+
 
     let client = MlaasModel()
 
@@ -38,16 +49,160 @@ class TutorialViewController: UIViewController {
         
         view.backgroundColor = .black
 
-        // Configure the user's drawing layer
+        setupUI()
+        setupConstraints()
         setupDrawingLayer()
         setupBoundingBox()
-
+        
         progressView.progress = 0.0
         progressLabel.isHidden = true
         submitButton.isEnabled = false
         clearButton.isEnabled = false
+
         loadNextLetter()
     }
+
+    // MARK: - UI Setup
+    private func setupUI() {
+        // Activity Indicator
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.color = .white
+        activityIndicator.hidesWhenStopped = true
+        view.addSubview(activityIndicator)
+        view.bringSubviewToFront(activityIndicator)
+        
+        // Instructions Label
+        instructionsLabel.text = "Instructions Label"
+        instructionsLabel.font = UIFont.boldSystemFont(ofSize: 22)
+        instructionsLabel.textColor = .white
+        instructionsLabel.textAlignment = .center
+        instructionsLabel.numberOfLines = 0
+        view.addSubview(instructionsLabel)
+
+        // Progress View
+        progressView.tintColor = .systemBlue
+        view.addSubview(progressView)
+
+        // Progress Label
+        progressLabel.text = "Progress Label"
+        progressLabel.font = UIFont.systemFont(ofSize: 16)
+        progressLabel.textColor = .white
+        progressLabel.textAlignment = .center
+        progressLabel.numberOfLines = 0
+        view.addSubview(progressLabel)
+        
+        // Submit Button
+        submitButton.setTitle("Submit", for: .normal)
+        submitButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        submitButton.setTitleColor(.white, for: .normal)
+        submitButton.backgroundColor = .systemBlue
+        submitButton.layer.cornerRadius = 10
+        submitButton.addTarget(self, action: #selector(submitButtonTapped(_:)), for: .touchUpInside)
+        view.addSubview(submitButton)
+
+        // Clear Button
+        clearButton.setTitle("Clear", for: .normal)
+        clearButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        clearButton.setTitleColor(.white, for: .normal)
+        clearButton.backgroundColor = .systemYellow
+        clearButton.layer.cornerRadius = 10
+        clearButton.addTarget(self, action: #selector(clearButtonTapped(_:)), for: .touchUpInside)
+        view.addSubview(clearButton)
+
+        // Play Sound Button
+        playSoundButton.setTitle("Play Sound", for: .normal)
+        playSoundButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        playSoundButton.setTitleColor(.white, for: .normal)
+        playSoundButton.backgroundColor = .systemPurple
+        playSoundButton.layer.cornerRadius = 10
+        playSoundButton.addTarget(self, action: #selector(playSoundButtonTapped(_:)), for: .touchUpInside)
+        view.addSubview(playSoundButton)
+    }
+
+    // MARK: - Constraints
+    private func setupConstraints() {
+        // Disable autoresizing masks for all UI components
+        instructionsLabel.translatesAutoresizingMaskIntoConstraints = false
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        progressLabel.translatesAutoresizingMaskIntoConstraints = false
+        submitButton.translatesAutoresizingMaskIntoConstraints = false
+        clearButton.translatesAutoresizingMaskIntoConstraints = false
+        playSoundButton.translatesAutoresizingMaskIntoConstraints = false
+
+        // Add Description Label
+        let descriptionLabel = UILabel()
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        descriptionLabel.text = "Trace each letter carefully, listen to its sound, and prepare to be quizzed later to unlock the next level!"
+        descriptionLabel.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        descriptionLabel.textColor = .white
+        descriptionLabel.textAlignment = .center
+        descriptionLabel.numberOfLines = 0
+        view.addSubview(descriptionLabel)
+
+        NSLayoutConstraint.activate([
+            // Progress View
+            progressView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            progressView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            progressView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            progressView.heightAnchor.constraint(equalToConstant: 10),
+
+            // Instructions Label
+            instructionsLabel.topAnchor.constraint(equalTo: progressView.bottomAnchor, constant: 16),
+            instructionsLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+
+            // Description Label
+            descriptionLabel.topAnchor.constraint(equalTo: instructionsLabel.bottomAnchor, constant: 16),
+            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
+            // Progress Label
+            progressLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 16),
+            progressLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            // Activity Indicator
+            activityIndicator.topAnchor.constraint(equalTo: progressLabel.bottomAnchor, constant: 8), // Close to progressLabel
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            
+            // Play Sound Button
+            playSoundButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            playSoundButton.bottomAnchor.constraint(equalTo: clearButton.topAnchor, constant: -20),
+            playSoundButton.widthAnchor.constraint(equalToConstant: 160),
+            playSoundButton.heightAnchor.constraint(equalToConstant: 60), // Increased button height
+
+            // Clear Button
+            clearButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            clearButton.trailingAnchor.constraint(equalTo: view.centerXAnchor, constant: -16),
+            clearButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100),
+            clearButton.heightAnchor.constraint(equalToConstant: 60), // Increased button height
+
+            // Submit Button
+            submitButton.leadingAnchor.constraint(equalTo: view.centerXAnchor, constant: 16),
+            submitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            submitButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100),
+            submitButton.heightAnchor.constraint(equalToConstant: 60), // Increased button height
+        ])
+        view.bringSubviewToFront(activityIndicator)
+    }
+
+
+    // MARK: - Play Sound
+    @objc private func playSoundButtonTapped(_ sender: UIButton) {
+        guard let currentLetter = arabicLetters[safe: currentLetterIndex],
+              let soundFile = letterSounds[currentLetter],
+              let soundURL = Bundle.main.url(forResource: soundFile, withExtension: nil) else {
+            print("Sound file not found for letter: \(arabicLetters[currentLetterIndex])")
+            return
+        }
+
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+            audioPlayer?.play()
+        } catch {
+            print("Error playing sound: \(error.localizedDescription)")
+        }
+    }
+
 
     func setupDrawingLayer() {
         drawnLayer.strokeColor = UIColor.white.cgColor
@@ -314,7 +469,7 @@ class TutorialViewController: UIViewController {
 
 
 
-    @IBAction func submitButtonTapped(_ sender: UIButton) {
+    @objc private func submitButtonTapped(_ sender: UIButton) {
         guard let boundingBox = boundingBoxLayer.path?.boundingBox else {
             print("Bounding box is not available")
             return
@@ -324,36 +479,26 @@ class TutorialViewController: UIViewController {
         
         // Add a short delay so dashed lines are fully hidden before capturing png
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            // Capture the user-drawn image from the view
             guard let capturedImage = self.viewToImage() else {
                 print("Failed to capture image")
-                // Restore dashed lines if capturing fails
                 self.showDashedLines()
                 return
             }
-
-            // Crop the image to the bounding box
+            
             guard let croppedImage = self.cropImageToBoundingBox(capturedImage, boundingBox: boundingBox) else {
                 print("Failed to crop image to bounding box")
-                // Restore dashed lines if cropping fails
                 self.showDashedLines()
                 return
             }
             
-            print("Cropped image dimensions: \(croppedImage.size)")
-            
-            // Restore dashed lines after the image has been captured
             self.showDashedLines()
             
-            // Extract features from the cropped image directly
             let features = self.extractFeatures(from: croppedImage)
             print("Extracted features: \(features)")
-
-            // Save the features and label to the tutorial data
+            
             let label = self.arabicLetters[self.currentLetterIndex]
             self.tutorialData.append((features: features, label: label))
-
-            // Upload the cropped image to the server
+            
             let filename = "user_letter_\(self.currentLetterIndex).png"
             self.client.uploadPNG(image: croppedImage, filename: filename) { success, error in
                 DispatchQueue.main.async {
@@ -365,13 +510,11 @@ class TutorialViewController: UIViewController {
                     }
                 }
             }
-
-            // Proceed to the next letter
+            
             self.currentLetterIndex += 1
             self.loadNextLetter()
         }
     }
-
 
     func cropImageToBoundingBox(_ image: UIImage, boundingBox: CGRect) -> UIImage? {
         // Adjust the bounding box to slightly crop inside the green border
@@ -400,7 +543,7 @@ class TutorialViewController: UIViewController {
         return resizedImage
     }
 
-    @IBAction func clearButtonTapped(_ sender: UIButton) {
+    @objc private func clearButtonTapped(_ sender: UIButton) {
         drawnPath = UIBezierPath()
         touchCoordinates.removeAll()
         drawnLayer.path = nil
@@ -445,10 +588,13 @@ class TutorialViewController: UIViewController {
         submitButton.isEnabled = false
         clearButton.isEnabled = false
         progressLabel.isHidden = false
-        
+
         fadeInLabel(progressLabel)
         typewriterEffect(progressLabel, text: "Learning your handwriting style...", characterDelay: 0.1)
-       
+
+        // Start the activity indicator
+        activityIndicator.startAnimating()
+
         // Step 1: Prepare user data
         client.prepareUserDataAndUpload(tutorialData: tutorialData, dsid: 1) { success, error in
             DispatchQueue.main.async {
@@ -456,33 +602,39 @@ class TutorialViewController: UIViewController {
                     print("Data uploaded successfully. Training model...")
 
                     // Step 2: Train the model after successful upload
-                    self.trainModelForDsid(1)
+                    self.trainModel(dsid: 1)
                 } else {
                     // Handle upload failure
                     print("Failed to upload user data: \(error ?? "Unknown error")")
+                    self.activityIndicator.stopAnimating()
                     self.showAlert(title: "Data Upload Failed", message: error ?? "Unknown error")
                 }
             }
         }
     }
 
+    private func trainModel(dsid: Int) {
+        // Simulate longer processing time (if necessary for debugging)
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2) {
+            self.client.trainModel(dsid: dsid, completion: { result in
+                DispatchQueue.main.async {
+                    // Stop the activity indicator only after training is complete
+                    self.activityIndicator.stopAnimating()
 
-    // Function to handle model training
-    private func trainModelForDsid(_ dsid: Int) {
-        self.client.trainModel(dsid: dsid) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    print("Model trained successfully.")
-                    self.progressLabel.text = "Model trained successfully!"
-                    self.showPostTutorialOptions()
-                case .failure(let error):
-                    print("Model training failed: \(error.localizedDescription)")
-                    self.showAlert(title: "Training Failed", message: error.localizedDescription)
+                    switch result {
+                    case .success:
+                        print("Model trained successfully.")
+                        self.progressLabel.text = "Model trained successfully!"
+                        self.showPostTutorialOptions()
+                    case .failure(let error):
+                        print("Model training failed: \(error.localizedDescription)")
+                        self.showAlert(title: "Training Failed", message: error.localizedDescription)
+                    }
                 }
-            }
+            })
         }
     }
+
 
     func hideDashedLines() {
         for segment in dashSegments {
@@ -533,6 +685,8 @@ class TutorialViewController: UIViewController {
 
 
 
+
    
 
     
+

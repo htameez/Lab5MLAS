@@ -34,13 +34,13 @@ enum NetworkError: Error {
 
 class MlaasModel: NSObject, URLSessionDelegate {
     // MARK: - Properties
-    var server_ip = "192.168.1.92" // Replace with your server IP
+    var server_ip = "192.168.50.203" // Replace with your server IP
     private var dsid: Int = 1 // Default DSID
 
     lazy var session = {
         let sessionConfig = URLSessionConfiguration.ephemeral
-        sessionConfig.timeoutIntervalForRequest = 300.0
-        sessionConfig.timeoutIntervalForResource = 600.0
+        sessionConfig.timeoutIntervalForRequest = 600.0
+        sessionConfig.timeoutIntervalForResource = 1200.0
         return URLSession(configuration: sessionConfig, delegate: self, delegateQueue: nil)
     }()
 
@@ -84,36 +84,47 @@ class MlaasModel: NSObject, URLSessionDelegate {
 
     // MARK: - Train Model (XGBoost Only)
     func trainModel(dsid: Int, completion: @escaping (Result<Void, Error>) -> Void) {
-        let urlString = "http://\(server_ip):8000/train_model/\(dsid)?model_type=XGBoost"
+        let urlString = "http://\(server_ip):8000/train_model/\(dsid)"
         guard let url = URL(string: urlString) else {
             completion(.failure(NetworkError.invalidURL))
             return
         }
 
-        var request = URLRequest(url: url)
-        request.httpMethod = RequestEnum.get.rawValue
+        // Custom URLSession Configuration
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.timeoutIntervalForRequest = 600  // 10 minutes
+        sessionConfig.timeoutIntervalForResource = 1200  // 20 minutes
 
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        let session = URLSession(configuration: sessionConfig)
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+
+        // Handle the request
+        let task = session.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("Training error: \(error.localizedDescription)")
                 completion(.failure(error))
                 return
             }
 
+            // Log raw server response (if needed)
+            if let data = data, let responseString = String(data: data, encoding: .utf8) {
+                print("Raw server response: \(responseString)") // Optional log
+            }
+
+            // Check HTTP status
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                print("Unexpected server response during training.")
                 completion(.failure(NetworkError.serverError))
                 return
             }
 
-            DispatchQueue.main.async {
-                UserDefaults.standard.set(true, forKey: "isTrained")
-                print("Training completed successfully.")
-                
-                completion(.success(()))
-            }
-        }.resume()
+            print("Training completed successfully.")
+            completion(.success(()))
+        }
+        task.resume()
     }
+
 
 
     func predict(dsid: Int, feature: [Double], completion: @escaping (Result<String, Error>) -> Void) {
@@ -277,3 +288,4 @@ class MlaasModel: NSObject, URLSessionDelegate {
 
 
 }
+
