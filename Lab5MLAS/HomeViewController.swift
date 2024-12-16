@@ -27,6 +27,7 @@ class HomeViewController: UIViewController {
         // Start dataset preparation with activity indicator
         startPreparingDataset()
     }
+    
 
     // MARK: - UI Setup
     private func setupUI() {
@@ -240,7 +241,10 @@ class HomeViewController: UIViewController {
     // MARK: - Dataset Preparation
     private func startPreparingDataset() {
         activityIndicator.startAnimating()
-        let dataPath = "/Users/hamnatameez/CS5323/Lab5Python2/datasets/ahcd/Train Images 13440x32x32/train"
+        let dataPath = "/Users/zareenahmurad/Desktop/CS/CS5323/Lab5Python/datasets/ahcd/Train Images 13440x32x32/train"
+        
+        print("Preparing request for dataset preparation:")
+        print("  Data Path: \(dataPath)")
         
         client.prepareDataset(dsid: 1, dataPath: dataPath) { [weak self] success, errorMessage in
             DispatchQueue.main.async {

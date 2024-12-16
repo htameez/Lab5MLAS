@@ -6,6 +6,14 @@
 //  Updated by Hamna Tameez on 11/25/24.
 //
 
+//
+//  MlaasModel.swift
+//  HTTPSwiftExample
+//
+//  Created by Eric Cooper Larson on 6/5/24.
+//  Updated by Hamna Tameez on 11/25/24.
+//
+
 import UIKit
 
 protocol ClientDelegate {
@@ -34,7 +42,7 @@ enum NetworkError: Error {
 
 class MlaasModel: NSObject, URLSessionDelegate {
     // MARK: - Properties
-    var server_ip = "192.168.1.249" // Replace with your server IP
+    var server_ip = "192.168.1.92" // Replace with your server IP
     private var dsid: Int = 1 // Default DSID
 
     lazy var session = {
@@ -288,4 +296,3 @@ class MlaasModel: NSObject, URLSessionDelegate {
 
 
 }
-
