@@ -65,13 +65,25 @@
                                     <action selector="clearButtonPressed:" destination="iF6-79-kL2" eventType="touchUpInside" id="48g-tL-aGi"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jax-TC-EPW">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jax-TC-EPW">
                                 <rect key="frame" x="36" y="184" width="313" height="71"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="31"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DRf-N2-Lb6">
+                                <rect key="frame" x="111" y="668" width="181" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Replay Sound">
+                                    <fontDescription key="titleFontDescription" type="system" pointSize="25"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="replayButtonTapped:" destination="iF6-79-kL2" eventType="touchUpInside" id="tRx-KP-011"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
@@ -80,6 +92,7 @@
                         <outlet property="clearButton" destination="tpO-ns-huS" id="Xc1-K6-ClG"/>
                         <outlet property="instructionsLabel" destination="Jax-TC-EPW" id="RaV-vT-TtU"/>
                         <outlet property="progressView" destination="bN2-P7-P40" id="IC3-gz-2R3"/>
+                        <outlet property="replayButton" destination="DRf-N2-Lb6" id="q9t-CH-rhF"/>
                         <outlet property="submitButton" destination="oiE-Hs-2YY" id="twl-yK-Ul9"/>
                     </connections>
                 </viewController>

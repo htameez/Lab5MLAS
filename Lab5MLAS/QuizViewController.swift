@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import AVFoundation
 
-class QuizViewController: UIViewController {
+class QuizViewController: UIViewController, AVAudioPlayerDelegate {
 
     // MARK: - Properties
     var touchCoordinates = [(x: Double, y: Double)]()
@@ -28,7 +29,8 @@ class QuizViewController: UIViewController {
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var submitButton: UIButton!
     @IBOutlet weak var clearButton: UIButton!
-
+    @IBOutlet weak var replayButton: UIButton!
+    
     // MARK: - Properties
     var arabicLettersMapping: [Int: String] = [
         0: "ا", 1: "ب", 2: "ت", 3: "ث", 4: "ج", 5: "ح", 6: "خ",
@@ -37,6 +39,9 @@ class QuizViewController: UIViewController {
         19: "ف", 20: "ق", 21: "ك", 22: "ل", 23: "م", 24: "ن",
         25: "ه", 26: "و", 27: "ي"
     ]
+    
+    var audioPlayer: AVAudioPlayer? // For audio playback
+    let letterSounds = ["ا": "Alif.wav", "ب": "Ba.wav", "ت": "Ta.wav", "ث": "Sa.wav", "ج": "Jeem.wav"]
 
     
     // MARK: - Lifecycle
@@ -74,6 +79,9 @@ class QuizViewController: UIViewController {
     func setupButtons() {
         submitButton.isEnabled = false
         clearButton.isEnabled = false
+        replayButton.isHidden = true // Initially hidden
+        replayButton.isEnabled = false // Initially disabled
+        replayButton.addTarget(self, action: #selector(replayButtonTapped), for: .touchUpInside)
     }
 
     // MARK: - Load Question
@@ -81,8 +89,9 @@ class QuizViewController: UIViewController {
         resetDrawing()
         if currentIndex < arabicLetters.count {
             currentLetter = arabicLetters[currentIndex]
-            instructionsLabel.text = "Write the letter: \(currentLetter)"
+            instructionsLabel.text = "Listen to the sound and write the letter."
             progressView.progress = Float(currentIndex) / Float(arabicLetters.count)
+            playSound(for: currentLetter) // Play sound automatically
         } else {
             progressView.progress = 1.0
             showResults()
@@ -96,8 +105,39 @@ class QuizViewController: UIViewController {
         drawnLayer.path = nil
         submitButton.isEnabled = false
         clearButton.isEnabled = false
+        replayButton.isHidden = true // Hide the play button during reset
+        replayButton.isEnabled = false // Disable the play button during reset
+    }
+    
+    // MARK: - Play Sound Automatically
+    func playSound(for letter: String) {
+        guard let soundFile = letterSounds[letter],
+              let soundURL = Bundle.main.url(forResource: soundFile, withExtension: nil) else {
+            print("Sound file not found for letter: \(letter)")
+            return
+        }
+
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+            audioPlayer?.delegate = self // Set delegate to detect when audio finishes
+            audioPlayer?.play()
+        } catch {
+            print("Error playing sound: \(error.localizedDescription)")
+        }
+    }
+    
+    // MARK: - AVAudioPlayerDelegate
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        // Enable and show the play button after the audio finishes
+        replayButton.isHidden = false
+        replayButton.isEnabled = true
     }
 
+    // MARK: - Replay Sound
+    @IBAction func replayButtonTapped(_ sender: Any) {
+        playSound(for: currentLetter)
+    }
+    
     // MARK: - Touch Handling
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
@@ -343,3 +383,4 @@ class QuizViewController: UIViewController {
         present(alert, animated: true)
     }
 }
+

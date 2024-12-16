@@ -388,24 +388,26 @@ class TutorialViewController: UIViewController {
         guard let touch = touches.first else { return }
         let point = touch.location(in: self.view)
 
-        // Ensure the point is inside the bounding box before adding it to the path
-        if let boundingBoxPath = boundingBoxLayer.path, boundingBoxPath.contains(point) {
-            // Add to the drawn path
-            drawnPath.addLine(to: point)
-            
-            // Update the drawn layer with the new path
-            drawnLayer.path = drawnPath.cgPath
-            
-            // Append the coordinates for future use
-            touchCoordinates.append((x: Double(point.x), y: Double(point.y)))
-
-            // Enable buttons after drawing starts
-            if !submitButton.isEnabled {
-                submitButton.isEnabled = true
-                clearButton.isEnabled = true
+        // Check all segments to see if the user is touching any segment
+        for segment in dashSegments {
+            let segmentPath = segment.path.cgPath
+            if segmentPath.contains(point) {
+                // Change the specific segment's color to green
+                segment.layer.strokeColor = UIColor.green.cgColor
             }
         }
+
+        // Update the user's drawn path (normal tracing)
+        drawnPath.addLine(to: point)
+        drawnLayer.path = drawnPath.cgPath
+        touchCoordinates.append((x: Double(point.x), y: Double(point.y)))
+
+        if !submitButton.isEnabled {
+            submitButton.isEnabled = true
+            clearButton.isEnabled = true
+        }
     }
+
     
     func viewToImage() -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 0.0)

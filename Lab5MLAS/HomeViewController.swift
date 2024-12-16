@@ -240,7 +240,7 @@ class HomeViewController: UIViewController {
     // MARK: - Dataset Preparation
     private func startPreparingDataset() {
         activityIndicator.startAnimating()
-        let dataPath = "/Users/alexandrageer/Desktop/Lab5Python/datasets/ahcd/Train Images 13440x32x32/train"
+        let dataPath = "/Users/hamnatameez/CS5323/Lab5Python2/datasets/ahcd/Train Images 13440x32x32/train"
         
         client.prepareDataset(dsid: 1, dataPath: dataPath) { [weak self] success, errorMessage in
             DispatchQueue.main.async {
