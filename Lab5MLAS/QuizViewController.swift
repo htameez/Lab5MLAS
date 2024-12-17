@@ -18,18 +18,33 @@ class QuizViewController: UIViewController, AVAudioPlayerDelegate {
     var boundingBoxLayer = CAShapeLayer()
     var currentLetter = ""
     var quizResults: [(expected: String, predicted: String)] = []
-    let arabicLetters = ["ا", "ب", "ت", "ث", "ج"]
+    let lessonLetters: [[String]] = [
+        ["ا", "ب", "ت", "ث", "ج", "ح", "خ"], // Lesson 1
+        ["د", "ذ", "ر", "ز", "س", "ش", "ص"], // Lesson 2
+        ["ض", "ط", "ظ", "ع", "غ", "ف", "ق"], // Lesson 3
+        ["ك", "ل", "م", "ن", "ه", "و", "ي"]  // Lesson 4
+    ]
+    
+    var customLetterList: [String]? // For custom quizzes like missed letters
     var currentIndex = 0
-
+    var currentLesson: Int = 1 // Default to Lesson 1
+    var currentLetterList: [String] {
+        // If custom list is provided, use it. Otherwise, use the lesson list.
+        return customLetterList ?? lessonLetters[currentLesson - 1]
+    }
 
     let client = MlaasModel()
    
     // MARK: - IBOutlets
     @IBOutlet weak var instructionsLabel: UILabel!
     @IBOutlet weak var progressView: UIProgressView!
-    @IBOutlet weak var submitButton: UIButton!
-    @IBOutlet weak var clearButton: UIButton!
-    @IBOutlet weak var replayButton: UIButton!
+    
+    private let submitButton = UIButton(type: .system)
+    private let clearButton = UIButton(type: .system)
+    private let replayButton = UIButton(type: .system)
+    let buttonWidthMultiplier: CGFloat = 0.6 // 60% of the bounding box width
+
+
     
     // MARK: - Properties
     var arabicLettersMapping: [Int: String] = [
@@ -41,7 +56,37 @@ class QuizViewController: UIViewController, AVAudioPlayerDelegate {
     ]
     
     var audioPlayer: AVAudioPlayer? // For audio playback
-    let letterSounds = ["ا": "Alif.wav", "ب": "Ba.wav", "ت": "Ta.wav", "ث": "Sa.wav", "ج": "Jeem.wav"]
+    
+    let letterSounds: [String: String] = [
+        "ا": "Alif.wav",
+        "ب": "Ba.wav",
+        "ت": "Ta.wav",
+        "ث": "Sa.wav",
+        "ج": "Jeem.wav",
+        "ح": "Hha.wav",
+        "خ": "Kha.wav",
+        "د": "Dal.wav",
+        "ذ": "Taj Zhal.wav",
+        "ر": "Raa.wav",
+        "ز": "Taj Zaa.wav",
+        "س": "Seen.wav",
+        "ش": "Sheen.wav",
+        "ص": "Saud.wav",
+        "ض": "Duad.wav",
+        "ط": "Taj Tua.wav",
+        "ظ": "Taj Zua.wav",
+        "ع": "Aain.wav",
+        "غ": "Ghain.wav",
+        "ف": "Faa.wav",
+        "ق": "Qauf.wav",
+        "ك": "Kaif.wav",
+        "ل": "Laam.wav",
+        "م": "Meem.wav",
+        "ن": "Noon.wav",
+        "ه": "Haa.wav",
+        "و": "Taj wao.wav",
+        "ي": "Taj Yaa.wav"
+    ]
 
     
     // MARK: - Lifecycle
@@ -77,26 +122,93 @@ class QuizViewController: UIViewController, AVAudioPlayerDelegate {
     }
 
     func setupButtons() {
+        // Configure Submit Button
+        configureButton(
+            button: submitButton,
+            title: "Submit",
+            backgroundColor: UIColor(red: 0.0, green: 0.1, blue: 0.4, alpha: 1.0),
+            titleColor: .white,
+            action: #selector(submitButtonPressed)
+        )
         submitButton.isEnabled = false
+        view.addSubview(submitButton)
+
+        // Configure Clear Button
+        configureButton(
+            button: clearButton,
+            title: "Clear",
+            backgroundColor: UIColor(red: 0.0, green: 0.5, blue: 1.0, alpha: 1.0),
+            titleColor: .white,
+            action: #selector(clearButtonPressed)
+        )
         clearButton.isEnabled = false
-        replayButton.isHidden = true // Initially hidden
-        replayButton.isEnabled = false // Initially disabled
-        replayButton.addTarget(self, action: #selector(replayButtonTapped), for: .touchUpInside)
+        view.addSubview(clearButton)
+
+        // Configure Replay Button
+        configureButton(
+            button: replayButton,
+            title: "Replay",
+            backgroundColor: UIColor(red: 0.7, green: 0.9, blue: 1.0, alpha: 1.0),
+            titleColor: .black, // Title color specific to Replay button
+            action: #selector(replayButtonTapped)
+        )
+        replayButton.isEnabled = false
+        view.addSubview(replayButton)
+
+        // Add Constraints
+        applyButtonConstraints()
     }
+
+    private func configureButton(button: UIButton, title: String, backgroundColor: UIColor, titleColor: UIColor, action: Selector) {
+        button.setTitle(title, for: .normal)
+        button.setTitleColor(titleColor, for: .normal) // Allow dynamic title color
+        button.backgroundColor = backgroundColor
+        button.layer.cornerRadius = 10
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: action, for: .touchUpInside)
+    }
+
+    private func applyButtonConstraints() {
+        let boundingBoxWidth: CGFloat = 300 * buttonWidthMultiplier
+
+        NSLayoutConstraint.activate([
+            // Play Sound Button
+            replayButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            replayButton.widthAnchor.constraint(equalToConstant: boundingBoxWidth),
+            replayButton.bottomAnchor.constraint(equalTo: clearButton.topAnchor, constant: -16),
+            replayButton.heightAnchor.constraint(equalToConstant: 50),
+
+            // Clear Button
+            clearButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            clearButton.widthAnchor.constraint(equalToConstant: boundingBoxWidth),
+            clearButton.bottomAnchor.constraint(equalTo: submitButton.topAnchor, constant: -16),
+            clearButton.heightAnchor.constraint(equalToConstant: 50),
+
+            // Submit Button
+            submitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            submitButton.widthAnchor.constraint(equalToConstant: boundingBoxWidth),
+            submitButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            submitButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+
 
     // MARK: - Load Question
     func loadNextQuestion() {
         resetDrawing()
-        if currentIndex < arabicLetters.count {
-            currentLetter = arabicLetters[currentIndex]
-            instructionsLabel.text = "Listen to the sound and write the letter."
-            progressView.progress = Float(currentIndex) / Float(arabicLetters.count)
-            playSound(for: currentLetter) // Play sound automatically
+        if currentIndex < currentLetterList.count {
+            currentLetter = currentLetterList[currentIndex]
+            instructionsLabel.font = UIFont.systemFont(ofSize: 20)
+            instructionsLabel.text = "Listen and write the letter!"
+            progressView.progress = Float(currentIndex) / Float(currentLetterList.count)
+            playSound(for: currentLetter)
         } else {
             progressView.progress = 1.0
             showResults()
         }
     }
+
 
     // MARK: - Reset Drawing
     func resetDrawing() {
@@ -119,7 +231,7 @@ class QuizViewController: UIViewController, AVAudioPlayerDelegate {
 
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
-            audioPlayer?.delegate = self // Set delegate to detect when audio finishes
+            audioPlayer?.delegate = self
             audioPlayer?.play()
         } catch {
             print("Error playing sound: \(error.localizedDescription)")
@@ -151,6 +263,7 @@ class QuizViewController: UIViewController, AVAudioPlayerDelegate {
 
         // Ensure the point is within the bounding box
         if let boundingBoxPath = boundingBoxLayer.path, boundingBoxPath.contains(point) {
+            // Update the user's drawn path (normal tracing)
             drawnPath.addLine(to: point)
             drawnLayer.path = drawnPath.cgPath
             touchCoordinates.append((x: Double(point.x), y: Double(point.y)))
@@ -183,58 +296,60 @@ class QuizViewController: UIViewController, AVAudioPlayerDelegate {
             print("Failed to crop image to bounding box")
             return
         }
-        
-        print("Captured and cropped image: \(croppedImage.size)")
 
-        // Extract features from the cropped image
         let features = extractFeatures(from: croppedImage)
-        print("Extracted Features: \(features)")
-        
+
         // Predict using the model
         client.predict(dsid: 1, feature: features) { result in
             DispatchQueue.main.async {
-                print("Result from prediction API: \(result)") // Log the entire result
-                
                 switch result {
                 case .success(let predictedLabel):
-                    print("Raw predictedLabel: \(predictedLabel)") // Log raw predictedLabel
-                    if let predictedInt = Int(predictedLabel), // Try converting to Int
+                    if let predictedInt = Int(predictedLabel),
                        let mappedLetter = self.arabicLettersMapping[predictedInt] {
-                        
-                        print("Mapped letter: \(mappedLetter)")
+
+                        // Append to quiz results
                         self.quizResults.append((expected: self.currentLetter, predicted: mappedLetter))
-                        
-                        // Show immediate feedback
-                        if mappedLetter == self.currentLetter {
-                            self.showAlert(title: "Correct!", message: "You wrote \(mappedLetter) correctly!")
-                            // Clear drawing and move to the next question
-                            self.resetDrawing()
-                            self.currentIndex += 1
-                            self.loadNextQuestion()
+
+                        // Check if the current index is the last letter for the lesson
+                        if self.currentIndex == self.currentLetterList.count - 1 {
+                            // Feedback for the last question
+                            let feedbackMessage = (mappedLetter == self.currentLetter)
+                                ? "You wrote \(mappedLetter) correctly!"
+                                : "Expected \(self.currentLetter), but got \(mappedLetter)."
+
+                            self.showAlert(title: (mappedLetter == self.currentLetter) ? "Correct!" : "Incorrect!",
+                                           message: feedbackMessage) {
+                                // Delay before showing results
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { // 1-second delay
+                                    self.showResults()
+                                }
+                            }
                         } else {
-                            self.showAlert(title: "Incorrect!", message: "Expected \(self.currentLetter), but got \(mappedLetter).")
-                            // Clear drawing and move to the next question
-                            self.resetDrawing()
-                            self.currentIndex += 1
-                            self.loadNextQuestion()
+                            // Provide feedback and load the next letter
+                            let feedbackMessage = (mappedLetter == self.currentLetter)
+                                ? "You wrote \(mappedLetter) correctly!"
+                                : "Expected \(self.currentLetter), but got \(mappedLetter)."
+
+                            self.showAlert(title: (mappedLetter == self.currentLetter) ? "Correct!" : "Incorrect!",
+                                           message: feedbackMessage) {
+                                self.resetDrawing()
+                                self.currentIndex += 1
+                                self.loadNextQuestion()
+                            }
                         }
                     } else {
-                        print("Prediction \(predictedLabel) is invalid or does not map to a valid letter.")
-                        self.showAlert(title: "Error", message: "Invalid prediction received.")
+                        print("Prediction \(predictedLabel) is invalid.")
+                        self.showAlert(title: "Error", message: "Invalid prediction.")
                     }
                 case .failure(let error):
                     print("Prediction failed: \(error.localizedDescription)")
-                    self.showAlert(title: "Prediction Failed", message: error.localizedDescription)
+                    self.showAlert(title: "Error", message: error.localizedDescription)
                 }
             }
         }
     }
-
     
     func cropImageToBoundingBox(_ image: UIImage, boundingBox: CGRect) -> UIImage? {
-        // Log bounding box dimensions
-        print("Original Bounding Box:", boundingBox)
-
         let scale = UIScreen.main.scale
         let margin: CGFloat = 2.0
         let scaledBoundingBox = CGRect(
@@ -244,9 +359,6 @@ class QuizViewController: UIViewController, AVAudioPlayerDelegate {
             height: (boundingBox.height - 2 * margin) * scale
         )
 
-        // Log scaled bounding box dimensions
-        print("Scaled Bounding Box:", scaledBoundingBox)
-        print("Image Size:", image.size)
 
         // Ensure the bounding box is within the image bounds
         guard let cgImage = image.cgImage,
@@ -307,9 +419,6 @@ class QuizViewController: UIViewController, AVAudioPlayerDelegate {
         }
 
         context.draw(cgImage, in: CGRect(x: 0, y: 0, width: targetWidth, height: targetHeight))
-
-        print("Pixel data count: \(pixelData.count), Expected: \(pixelCount)")
-        print("Raw pixel data: \(pixelData)")
         
         // Map pixel values to a normalized [0, 1] range
         let features = pixelData.map { Double($0) }
@@ -317,7 +426,6 @@ class QuizViewController: UIViewController, AVAudioPlayerDelegate {
             print("Warning: Feature vector length is \(features.count), expected \(pixelCount).")
         }
         
-        print("Final feature vector: \(features)")
         return features
     }
 
@@ -333,7 +441,20 @@ class QuizViewController: UIViewController, AVAudioPlayerDelegate {
         let correctCount = quizResults.filter { $0.expected == $0.predicted }.count
         let totalQuestions = quizResults.count
         let message = "Correct Answers: \(correctCount)/\(totalQuestions)"
+        
+        // Save missed letters
+        let missedLetters = quizResults.filter { $0.expected != $0.predicted }.map { $0.expected }
+        saveMissedLetters(missedLetters)
+        
         showPostQuizOptions(message: message)
+    }
+
+
+    private func saveMissedLetters(_ letters: [String]) {
+        var existingLetters = UserDefaults.standard.array(forKey: "missedLetters") as? [String] ?? []
+        existingLetters.append(contentsOf: letters)
+        let uniqueLetters = Array(Set(existingLetters)) // Ensure no duplicates
+        UserDefaults.standard.setValue(uniqueLetters, forKey: "missedLetters")
     }
 
     func showPostQuizOptions(message: String) {
@@ -370,7 +491,6 @@ class QuizViewController: UIViewController, AVAudioPlayerDelegate {
         UIGraphicsEndImageContext()
 
         if let image = image {
-            print("Captured Image Size:", image.size)
         } else {
             print("Error: Failed to capture the image from the view")
         }

@@ -11,34 +11,6 @@
 		170A246B2CF6406A00A9A1C5 /* QuizViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170A246A2CF6406A00A9A1C5 /* QuizViewController.swift */; };
 		17F419532CF45C2A0075CF9B /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F419522CF45C2A0075CF9B /* TutorialViewController.swift */; };
 		6B1E729E2D0EC7B500303C6C /* TutorialIntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1E729D2D0EC7AB00303C6C /* TutorialIntroViewController.swift */; };
-		6B1E72BC2D0EEAFD00303C6C /* Seen.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72B22D0EEAFD00303C6C /* Seen.wav */; };
-		6B1E72BD2D0EEAFD00303C6C /* Hha.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72A72D0EEAFD00303C6C /* Hha.wav */; };
-		6B1E72BE2D0EEAFD00303C6C /* Noon.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72AD2D0EEAFD00303C6C /* Noon.wav */; };
-		6B1E72BF2D0EEAFD00303C6C /* Haa.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72A62D0EEAFD00303C6C /* Haa.wav */; };
-		6B1E72C02D0EEAFD00303C6C /* Ta.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72B42D0EEAFD00303C6C /* Ta.wav */; };
-		6B1E72C12D0EEAFD00303C6C /* Taj wao.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72B62D0EEAFD00303C6C /* Taj wao.wav */; };
-		6B1E72C22D0EEAFD00303C6C /* Kaif.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72A92D0EEAFD00303C6C /* Kaif.wav */; };
-		6B1E72C32D0EEAFD00303C6C /* Alif.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72A02D0EEAFD00303C6C /* Alif.wav */; };
-		6B1E72C42D0EEAFD00303C6C /* Qauf.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72AE2D0EEAFD00303C6C /* Qauf.wav */; };
-		6B1E72C52D0EEAFD00303C6C /* Taj Tua.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72B52D0EEAFD00303C6C /* Taj Tua.wav */; };
-		6B1E72C62D0EEAFD00303C6C /* Meem.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72AC2D0EEAFD00303C6C /* Meem.wav */; };
-		6B1E72C72D0EEAFD00303C6C /* Kha.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72AA2D0EEAFD00303C6C /* Kha.wav */; };
-		6B1E72C82D0EEAFD00303C6C /* Ba.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72A12D0EEAFD00303C6C /* Ba.wav */; };
-		6B1E72C92D0EEAFD00303C6C /* Sheen.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72B32D0EEAFD00303C6C /* Sheen.wav */; };
-		6B1E72CA2D0EEAFD00303C6C /* Taj Zaa.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72B82D0EEAFD00303C6C /* Taj Zaa.wav */; };
-		6B1E72CB2D0EEAFD00303C6C /* Taj Yaa.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72B72D0EEAFD00303C6C /* Taj Yaa.wav */; };
-		6B1E72CC2D0EEAFD00303C6C /* Dal.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72A22D0EEAFD00303C6C /* Dal.wav */; };
-		6B1E72CD2D0EEAFD00303C6C /* Raa.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72AF2D0EEAFD00303C6C /* Raa.wav */; };
-		6B1E72CE2D0EEAFD00303C6C /* Taj Zua.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72BA2D0EEAFD00303C6C /* Taj Zua.wav */; };
-		6B1E72CF2D0EEAFD00303C6C /* Faa.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72A42D0EEAFD00303C6C /* Faa.wav */; };
-		6B1E72D02D0EEAFD00303C6C /* Sa.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72B02D0EEAFD00303C6C /* Sa.wav */; };
-		6B1E72D12D0EEAFD00303C6C /* Laam.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72AB2D0EEAFD00303C6C /* Laam.wav */; };
-		6B1E72D22D0EEAFD00303C6C /* Jeem.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72A82D0EEAFD00303C6C /* Jeem.wav */; };
-		6B1E72D32D0EEAFD00303C6C /* Saud.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72B12D0EEAFD00303C6C /* Saud.wav */; };
-		6B1E72D42D0EEAFD00303C6C /* Taj Zhal.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72B92D0EEAFD00303C6C /* Taj Zhal.wav */; };
-		6B1E72D52D0EEAFD00303C6C /* Aain.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E729F2D0EEAFD00303C6C /* Aain.wav */; };
-		6B1E72D62D0EEAFD00303C6C /* Ghain.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72A52D0EEAFD00303C6C /* Ghain.wav */; };
-		6B1E72D72D0EEAFD00303C6C /* Duad.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6B1E72A32D0EEAFD00303C6C /* Duad.wav */; };
 		B6022E672C108DB400E2CC70 /* MlaasModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6022E662C108DB400E2CC70 /* MlaasModel.swift */; };
 		B67483DB1ACA2D6800A9970E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67483DA1ACA2D6800A9970E /* AppDelegate.swift */; };
 		B67483E01ACA2D6800A9970E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B67483DE1ACA2D6800A9970E /* Main.storyboard */; };
@@ -46,6 +18,35 @@
 		B67483E51ACA2D6800A9970E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B67483E31ACA2D6800A9970E /* LaunchScreen.xib */; };
 		B694B01A1FA377E4009A4277 /* RingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B694B0191FA377E4009A4277 /* RingBuffer.swift */; };
 		C72BEECB2CF6E90F00E86F47 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C72BEECA2CF6E90900E86F47 /* UIViewController+Extensions.swift */; };
+		C7922ABA2D11007B00C8BD99 /* Raa.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AAD2D11007B00C8BD99 /* Raa.wav */; };
+		C7922ABB2D11007B00C8BD99 /* Duad.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AA12D11007B00C8BD99 /* Duad.wav */; };
+		C7922ABC2D11007B00C8BD99 /* Ba.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922A9F2D11007B00C8BD99 /* Ba.wav */; };
+		C7922ABD2D11007B00C8BD99 /* Taj Tua.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AB32D11007B00C8BD99 /* Taj Tua.wav */; };
+		C7922ABE2D11007B00C8BD99 /* Taj Zhal.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AB72D11007B00C8BD99 /* Taj Zhal.wav */; };
+		C7922ABF2D11007B00C8BD99 /* Meem.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AAA2D11007B00C8BD99 /* Meem.wav */; };
+		C7922AC02D11007B00C8BD99 /* Qauf.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AAC2D11007B00C8BD99 /* Qauf.wav */; };
+		C7922AC12D11007B00C8BD99 /* Ta.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AB22D11007B00C8BD99 /* Ta.wav */; };
+		C7922AC22D11007B00C8BD99 /* Ghain.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AA32D11007B00C8BD99 /* Ghain.wav */; };
+		C7922AC32D11007B00C8BD99 /* Alif.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922A9E2D11007B00C8BD99 /* Alif.wav */; };
+		C7922AC42D11007B00C8BD99 /* Taj Zua.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AB82D11007B00C8BD99 /* Taj Zua.wav */; };
+		C7922AC52D11007B00C8BD99 /* Jeem.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AA62D11007B00C8BD99 /* Jeem.wav */; };
+		C7922AC62D11007B00C8BD99 /* Aain.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922A9D2D11007B00C8BD99 /* Aain.wav */; };
+		C7922AC72D11007B00C8BD99 /* Hha.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AA52D11007B00C8BD99 /* Hha.wav */; };
+		C7922AC82D11007B00C8BD99 /* Kha.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AA82D11007B00C8BD99 /* Kha.wav */; };
+		C7922AC92D11007B00C8BD99 /* Taj Zaa.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AB62D11007B00C8BD99 /* Taj Zaa.wav */; };
+		C7922ACA2D11007B00C8BD99 /* Taj wao.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AB42D11007B00C8BD99 /* Taj wao.wav */; };
+		C7922ACB2D11007B00C8BD99 /* Haa.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AA42D11007B00C8BD99 /* Haa.wav */; };
+		C7922ACC2D11007B00C8BD99 /* Seen.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AB02D11007B00C8BD99 /* Seen.wav */; };
+		C7922ACD2D11007B00C8BD99 /* Dal.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AA02D11007B00C8BD99 /* Dal.wav */; };
+		C7922ACE2D11007B00C8BD99 /* Taj Yaa.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AB52D11007B00C8BD99 /* Taj Yaa.wav */; };
+		C7922ACF2D11007B00C8BD99 /* Sheen.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AB12D11007B00C8BD99 /* Sheen.wav */; };
+		C7922AD02D11007B00C8BD99 /* Laam.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AA92D11007B00C8BD99 /* Laam.wav */; };
+		C7922AD12D11007B00C8BD99 /* Sa.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AAE2D11007B00C8BD99 /* Sa.wav */; };
+		C7922AD22D11007B00C8BD99 /* Kaif.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AA72D11007B00C8BD99 /* Kaif.wav */; };
+		C7922AD32D11007B00C8BD99 /* Faa.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AA22D11007B00C8BD99 /* Faa.wav */; };
+		C7922AD42D11007B00C8BD99 /* Noon.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AAB2D11007B00C8BD99 /* Noon.wav */; };
+		C7922AD52D11007B00C8BD99 /* Saud.wav in Resources */ = {isa = PBXBuildFile; fileRef = C7922AAF2D11007B00C8BD99 /* Saud.wav */; };
+		C7922AD72D1116C100C8BD99 /* MissedLettersTutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7922AD62D1116B700C8BD99 /* MissedLettersTutorialViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,34 +54,6 @@
 		170A246A2CF6406A00A9A1C5 /* QuizViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizViewController.swift; sourceTree = "<group>"; };
 		17F419522CF45C2A0075CF9B /* TutorialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
 		6B1E729D2D0EC7AB00303C6C /* TutorialIntroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialIntroViewController.swift; sourceTree = "<group>"; };
-		6B1E729F2D0EEAFD00303C6C /* Aain.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Aain.wav; sourceTree = "<group>"; };
-		6B1E72A02D0EEAFD00303C6C /* Alif.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Alif.wav; sourceTree = "<group>"; };
-		6B1E72A12D0EEAFD00303C6C /* Ba.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Ba.wav; sourceTree = "<group>"; };
-		6B1E72A22D0EEAFD00303C6C /* Dal.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Dal.wav; sourceTree = "<group>"; };
-		6B1E72A32D0EEAFD00303C6C /* Duad.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Duad.wav; sourceTree = "<group>"; };
-		6B1E72A42D0EEAFD00303C6C /* Faa.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Faa.wav; sourceTree = "<group>"; };
-		6B1E72A52D0EEAFD00303C6C /* Ghain.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Ghain.wav; sourceTree = "<group>"; };
-		6B1E72A62D0EEAFD00303C6C /* Haa.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Haa.wav; sourceTree = "<group>"; };
-		6B1E72A72D0EEAFD00303C6C /* Hha.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Hha.wav; sourceTree = "<group>"; };
-		6B1E72A82D0EEAFD00303C6C /* Jeem.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Jeem.wav; sourceTree = "<group>"; };
-		6B1E72A92D0EEAFD00303C6C /* Kaif.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Kaif.wav; sourceTree = "<group>"; };
-		6B1E72AA2D0EEAFD00303C6C /* Kha.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Kha.wav; sourceTree = "<group>"; };
-		6B1E72AB2D0EEAFD00303C6C /* Laam.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Laam.wav; sourceTree = "<group>"; };
-		6B1E72AC2D0EEAFD00303C6C /* Meem.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Meem.wav; sourceTree = "<group>"; };
-		6B1E72AD2D0EEAFD00303C6C /* Noon.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Noon.wav; sourceTree = "<group>"; };
-		6B1E72AE2D0EEAFD00303C6C /* Qauf.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Qauf.wav; sourceTree = "<group>"; };
-		6B1E72AF2D0EEAFD00303C6C /* Raa.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Raa.wav; sourceTree = "<group>"; };
-		6B1E72B02D0EEAFD00303C6C /* Sa.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Sa.wav; sourceTree = "<group>"; };
-		6B1E72B12D0EEAFD00303C6C /* Saud.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Saud.wav; sourceTree = "<group>"; };
-		6B1E72B22D0EEAFD00303C6C /* Seen.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Seen.wav; sourceTree = "<group>"; };
-		6B1E72B32D0EEAFD00303C6C /* Sheen.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Sheen.wav; sourceTree = "<group>"; };
-		6B1E72B42D0EEAFD00303C6C /* Ta.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Ta.wav; sourceTree = "<group>"; };
-		6B1E72B52D0EEAFD00303C6C /* Taj Tua.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Taj Tua.wav"; sourceTree = "<group>"; };
-		6B1E72B62D0EEAFD00303C6C /* Taj wao.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Taj wao.wav"; sourceTree = "<group>"; };
-		6B1E72B72D0EEAFD00303C6C /* Taj Yaa.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Taj Yaa.wav"; sourceTree = "<group>"; };
-		6B1E72B82D0EEAFD00303C6C /* Taj Zaa.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Taj Zaa.wav"; sourceTree = "<group>"; };
-		6B1E72B92D0EEAFD00303C6C /* Taj Zhal.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Taj Zhal.wav"; sourceTree = "<group>"; };
-		6B1E72BA2D0EEAFD00303C6C /* Taj Zua.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Taj Zua.wav"; sourceTree = "<group>"; };
 		B6022E662C108DB400E2CC70 /* MlaasModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MlaasModel.swift; sourceTree = "<group>"; };
 		B67483D51ACA2D6800A9970E /* Lab5MLAS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lab5MLAS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B67483D91ACA2D6800A9970E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -90,6 +63,35 @@
 		B67483E41ACA2D6800A9970E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		B694B0191FA377E4009A4277 /* RingBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingBuffer.swift; sourceTree = "<group>"; };
 		C72BEECA2CF6E90900E86F47 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
+		C7922A9D2D11007B00C8BD99 /* Aain.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Aain.wav; sourceTree = "<group>"; };
+		C7922A9E2D11007B00C8BD99 /* Alif.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Alif.wav; sourceTree = "<group>"; };
+		C7922A9F2D11007B00C8BD99 /* Ba.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Ba.wav; sourceTree = "<group>"; };
+		C7922AA02D11007B00C8BD99 /* Dal.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Dal.wav; sourceTree = "<group>"; };
+		C7922AA12D11007B00C8BD99 /* Duad.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Duad.wav; sourceTree = "<group>"; };
+		C7922AA22D11007B00C8BD99 /* Faa.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Faa.wav; sourceTree = "<group>"; };
+		C7922AA32D11007B00C8BD99 /* Ghain.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Ghain.wav; sourceTree = "<group>"; };
+		C7922AA42D11007B00C8BD99 /* Haa.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Haa.wav; sourceTree = "<group>"; };
+		C7922AA52D11007B00C8BD99 /* Hha.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Hha.wav; sourceTree = "<group>"; };
+		C7922AA62D11007B00C8BD99 /* Jeem.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Jeem.wav; sourceTree = "<group>"; };
+		C7922AA72D11007B00C8BD99 /* Kaif.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Kaif.wav; sourceTree = "<group>"; };
+		C7922AA82D11007B00C8BD99 /* Kha.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Kha.wav; sourceTree = "<group>"; };
+		C7922AA92D11007B00C8BD99 /* Laam.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Laam.wav; sourceTree = "<group>"; };
+		C7922AAA2D11007B00C8BD99 /* Meem.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Meem.wav; sourceTree = "<group>"; };
+		C7922AAB2D11007B00C8BD99 /* Noon.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Noon.wav; sourceTree = "<group>"; };
+		C7922AAC2D11007B00C8BD99 /* Qauf.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Qauf.wav; sourceTree = "<group>"; };
+		C7922AAD2D11007B00C8BD99 /* Raa.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Raa.wav; sourceTree = "<group>"; };
+		C7922AAE2D11007B00C8BD99 /* Sa.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Sa.wav; sourceTree = "<group>"; };
+		C7922AAF2D11007B00C8BD99 /* Saud.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Saud.wav; sourceTree = "<group>"; };
+		C7922AB02D11007B00C8BD99 /* Seen.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Seen.wav; sourceTree = "<group>"; };
+		C7922AB12D11007B00C8BD99 /* Sheen.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Sheen.wav; sourceTree = "<group>"; };
+		C7922AB22D11007B00C8BD99 /* Ta.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Ta.wav; sourceTree = "<group>"; };
+		C7922AB32D11007B00C8BD99 /* Taj Tua.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Taj Tua.wav"; sourceTree = "<group>"; };
+		C7922AB42D11007B00C8BD99 /* Taj wao.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Taj wao.wav"; sourceTree = "<group>"; };
+		C7922AB52D11007B00C8BD99 /* Taj Yaa.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Taj Yaa.wav"; sourceTree = "<group>"; };
+		C7922AB62D11007B00C8BD99 /* Taj Zaa.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Taj Zaa.wav"; sourceTree = "<group>"; };
+		C7922AB72D11007B00C8BD99 /* Taj Zhal.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Taj Zhal.wav"; sourceTree = "<group>"; };
+		C7922AB82D11007B00C8BD99 /* Taj Zua.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Taj Zua.wav"; sourceTree = "<group>"; };
+		C7922AD62D1116B700C8BD99 /* MissedLettersTutorialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissedLettersTutorialViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,41 +105,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6B1E72BB2D0EEAFD00303C6C /* Letter Sounds */ = {
-			isa = PBXGroup;
-			children = (
-				6B1E729F2D0EEAFD00303C6C /* Aain.wav */,
-				6B1E72A02D0EEAFD00303C6C /* Alif.wav */,
-				6B1E72A12D0EEAFD00303C6C /* Ba.wav */,
-				6B1E72A22D0EEAFD00303C6C /* Dal.wav */,
-				6B1E72A32D0EEAFD00303C6C /* Duad.wav */,
-				6B1E72A42D0EEAFD00303C6C /* Faa.wav */,
-				6B1E72A52D0EEAFD00303C6C /* Ghain.wav */,
-				6B1E72A62D0EEAFD00303C6C /* Haa.wav */,
-				6B1E72A72D0EEAFD00303C6C /* Hha.wav */,
-				6B1E72A82D0EEAFD00303C6C /* Jeem.wav */,
-				6B1E72A92D0EEAFD00303C6C /* Kaif.wav */,
-				6B1E72AA2D0EEAFD00303C6C /* Kha.wav */,
-				6B1E72AB2D0EEAFD00303C6C /* Laam.wav */,
-				6B1E72AC2D0EEAFD00303C6C /* Meem.wav */,
-				6B1E72AD2D0EEAFD00303C6C /* Noon.wav */,
-				6B1E72AE2D0EEAFD00303C6C /* Qauf.wav */,
-				6B1E72AF2D0EEAFD00303C6C /* Raa.wav */,
-				6B1E72B02D0EEAFD00303C6C /* Sa.wav */,
-				6B1E72B12D0EEAFD00303C6C /* Saud.wav */,
-				6B1E72B22D0EEAFD00303C6C /* Seen.wav */,
-				6B1E72B32D0EEAFD00303C6C /* Sheen.wav */,
-				6B1E72B42D0EEAFD00303C6C /* Ta.wav */,
-				6B1E72B52D0EEAFD00303C6C /* Taj Tua.wav */,
-				6B1E72B62D0EEAFD00303C6C /* Taj wao.wav */,
-				6B1E72B72D0EEAFD00303C6C /* Taj Yaa.wav */,
-				6B1E72B82D0EEAFD00303C6C /* Taj Zaa.wav */,
-				6B1E72B92D0EEAFD00303C6C /* Taj Zhal.wav */,
-				6B1E72BA2D0EEAFD00303C6C /* Taj Zua.wav */,
-			);
-			path = "Letter Sounds";
-			sourceTree = "<group>";
-		};
 		B67483CC1ACA2D6800A9970E = {
 			isa = PBXGroup;
 			children = (
@@ -162,6 +129,7 @@
 				B694B0191FA377E4009A4277 /* RingBuffer.swift */,
 				B67483DE1ACA2D6800A9970E /* Main.storyboard */,
 				170A246A2CF6406A00A9A1C5 /* QuizViewController.swift */,
+				C7922AD62D1116B700C8BD99 /* MissedLettersTutorialViewController.swift */,
 				170A24682CF63F7C00A9A1C5 /* HomeViewController.swift */,
 				17F419522CF45C2A0075CF9B /* TutorialViewController.swift */,
 				6B1E729D2D0EC7AB00303C6C /* TutorialIntroViewController.swift */,
@@ -176,10 +144,45 @@
 		B67483D81ACA2D6800A9970E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				6B1E72BB2D0EEAFD00303C6C /* Letter Sounds */,
+				C7922AB92D11007B00C8BD99 /* Letter Sounds */,
 				B67483D91ACA2D6800A9970E /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C7922AB92D11007B00C8BD99 /* Letter Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				C7922A9D2D11007B00C8BD99 /* Aain.wav */,
+				C7922A9E2D11007B00C8BD99 /* Alif.wav */,
+				C7922A9F2D11007B00C8BD99 /* Ba.wav */,
+				C7922AA02D11007B00C8BD99 /* Dal.wav */,
+				C7922AA12D11007B00C8BD99 /* Duad.wav */,
+				C7922AA22D11007B00C8BD99 /* Faa.wav */,
+				C7922AA32D11007B00C8BD99 /* Ghain.wav */,
+				C7922AA42D11007B00C8BD99 /* Haa.wav */,
+				C7922AA52D11007B00C8BD99 /* Hha.wav */,
+				C7922AA62D11007B00C8BD99 /* Jeem.wav */,
+				C7922AA72D11007B00C8BD99 /* Kaif.wav */,
+				C7922AA82D11007B00C8BD99 /* Kha.wav */,
+				C7922AA92D11007B00C8BD99 /* Laam.wav */,
+				C7922AAA2D11007B00C8BD99 /* Meem.wav */,
+				C7922AAB2D11007B00C8BD99 /* Noon.wav */,
+				C7922AAC2D11007B00C8BD99 /* Qauf.wav */,
+				C7922AAD2D11007B00C8BD99 /* Raa.wav */,
+				C7922AAE2D11007B00C8BD99 /* Sa.wav */,
+				C7922AAF2D11007B00C8BD99 /* Saud.wav */,
+				C7922AB02D11007B00C8BD99 /* Seen.wav */,
+				C7922AB12D11007B00C8BD99 /* Sheen.wav */,
+				C7922AB22D11007B00C8BD99 /* Ta.wav */,
+				C7922AB32D11007B00C8BD99 /* Taj Tua.wav */,
+				C7922AB42D11007B00C8BD99 /* Taj wao.wav */,
+				C7922AB52D11007B00C8BD99 /* Taj Yaa.wav */,
+				C7922AB62D11007B00C8BD99 /* Taj Zaa.wav */,
+				C7922AB72D11007B00C8BD99 /* Taj Zhal.wav */,
+				C7922AB82D11007B00C8BD99 /* Taj Zua.wav */,
+			);
+			path = "Letter Sounds";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -243,34 +246,34 @@
 			buildActionMask = 2147483647;
 			files = (
 				B67483E01ACA2D6800A9970E /* Main.storyboard in Resources */,
-				6B1E72BC2D0EEAFD00303C6C /* Seen.wav in Resources */,
-				6B1E72BD2D0EEAFD00303C6C /* Hha.wav in Resources */,
-				6B1E72BE2D0EEAFD00303C6C /* Noon.wav in Resources */,
-				6B1E72BF2D0EEAFD00303C6C /* Haa.wav in Resources */,
-				6B1E72C02D0EEAFD00303C6C /* Ta.wav in Resources */,
-				6B1E72C12D0EEAFD00303C6C /* Taj wao.wav in Resources */,
-				6B1E72C22D0EEAFD00303C6C /* Kaif.wav in Resources */,
-				6B1E72C32D0EEAFD00303C6C /* Alif.wav in Resources */,
-				6B1E72C42D0EEAFD00303C6C /* Qauf.wav in Resources */,
-				6B1E72C52D0EEAFD00303C6C /* Taj Tua.wav in Resources */,
-				6B1E72C62D0EEAFD00303C6C /* Meem.wav in Resources */,
-				6B1E72C72D0EEAFD00303C6C /* Kha.wav in Resources */,
-				6B1E72C82D0EEAFD00303C6C /* Ba.wav in Resources */,
-				6B1E72C92D0EEAFD00303C6C /* Sheen.wav in Resources */,
-				6B1E72CA2D0EEAFD00303C6C /* Taj Zaa.wav in Resources */,
-				6B1E72CB2D0EEAFD00303C6C /* Taj Yaa.wav in Resources */,
-				6B1E72CC2D0EEAFD00303C6C /* Dal.wav in Resources */,
-				6B1E72CD2D0EEAFD00303C6C /* Raa.wav in Resources */,
-				6B1E72CE2D0EEAFD00303C6C /* Taj Zua.wav in Resources */,
-				6B1E72CF2D0EEAFD00303C6C /* Faa.wav in Resources */,
-				6B1E72D02D0EEAFD00303C6C /* Sa.wav in Resources */,
-				6B1E72D12D0EEAFD00303C6C /* Laam.wav in Resources */,
-				6B1E72D22D0EEAFD00303C6C /* Jeem.wav in Resources */,
-				6B1E72D32D0EEAFD00303C6C /* Saud.wav in Resources */,
-				6B1E72D42D0EEAFD00303C6C /* Taj Zhal.wav in Resources */,
-				6B1E72D52D0EEAFD00303C6C /* Aain.wav in Resources */,
-				6B1E72D62D0EEAFD00303C6C /* Ghain.wav in Resources */,
-				6B1E72D72D0EEAFD00303C6C /* Duad.wav in Resources */,
+				C7922ABA2D11007B00C8BD99 /* Raa.wav in Resources */,
+				C7922ABB2D11007B00C8BD99 /* Duad.wav in Resources */,
+				C7922ABC2D11007B00C8BD99 /* Ba.wav in Resources */,
+				C7922ABD2D11007B00C8BD99 /* Taj Tua.wav in Resources */,
+				C7922ABE2D11007B00C8BD99 /* Taj Zhal.wav in Resources */,
+				C7922ABF2D11007B00C8BD99 /* Meem.wav in Resources */,
+				C7922AC02D11007B00C8BD99 /* Qauf.wav in Resources */,
+				C7922AC12D11007B00C8BD99 /* Ta.wav in Resources */,
+				C7922AC22D11007B00C8BD99 /* Ghain.wav in Resources */,
+				C7922AC32D11007B00C8BD99 /* Alif.wav in Resources */,
+				C7922AC42D11007B00C8BD99 /* Taj Zua.wav in Resources */,
+				C7922AC52D11007B00C8BD99 /* Jeem.wav in Resources */,
+				C7922AC62D11007B00C8BD99 /* Aain.wav in Resources */,
+				C7922AC72D11007B00C8BD99 /* Hha.wav in Resources */,
+				C7922AC82D11007B00C8BD99 /* Kha.wav in Resources */,
+				C7922AC92D11007B00C8BD99 /* Taj Zaa.wav in Resources */,
+				C7922ACA2D11007B00C8BD99 /* Taj wao.wav in Resources */,
+				C7922ACB2D11007B00C8BD99 /* Haa.wav in Resources */,
+				C7922ACC2D11007B00C8BD99 /* Seen.wav in Resources */,
+				C7922ACD2D11007B00C8BD99 /* Dal.wav in Resources */,
+				C7922ACE2D11007B00C8BD99 /* Taj Yaa.wav in Resources */,
+				C7922ACF2D11007B00C8BD99 /* Sheen.wav in Resources */,
+				C7922AD02D11007B00C8BD99 /* Laam.wav in Resources */,
+				C7922AD12D11007B00C8BD99 /* Sa.wav in Resources */,
+				C7922AD22D11007B00C8BD99 /* Kaif.wav in Resources */,
+				C7922AD32D11007B00C8BD99 /* Faa.wav in Resources */,
+				C7922AD42D11007B00C8BD99 /* Noon.wav in Resources */,
+				C7922AD52D11007B00C8BD99 /* Saud.wav in Resources */,
 				B67483E51ACA2D6800A9970E /* LaunchScreen.xib in Resources */,
 				B67483E21ACA2D6800A9970E /* Images.xcassets in Resources */,
 			);
@@ -290,6 +293,7 @@
 				B6022E672C108DB400E2CC70 /* MlaasModel.swift in Sources */,
 				C72BEECB2CF6E90F00E86F47 /* UIViewController+Extensions.swift in Sources */,
 				B694B01A1FA377E4009A4277 /* RingBuffer.swift in Sources */,
+				C7922AD72D1116C100C8BD99 /* MissedLettersTutorialViewController.swift in Sources */,
 				170A24692CF63F7C00A9A1C5 /* HomeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,3 +1,11 @@
+//
+//  TutorialIntroViewController.swift
+//  Lab5MLAS
+//
+//  Created by Hamna Tameez on 11/25/24.
+//  Updated on 11/27/24.
+//
+
 import UIKit
 
 class TutorialIntroViewController: UIViewController {
@@ -45,7 +53,7 @@ class TutorialIntroViewController: UIViewController {
         view.addSubview(titleLabel)
 
         // Configure Description Label
-        descriptionLabel.font = UIFont.systemFont(ofSize: 16)
+        descriptionLabel.font = UIFont.systemFont(ofSize: 12)
         descriptionLabel.textAlignment = .center
         descriptionLabel.textColor = .white // White text for black background
         descriptionLabel.numberOfLines = 0

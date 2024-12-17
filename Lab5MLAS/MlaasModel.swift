@@ -6,14 +6,6 @@
 //  Updated by Hamna Tameez on 11/25/24.
 //
 
-//
-//  MlaasModel.swift
-//  HTTPSwiftExample
-//
-//  Created by Eric Cooper Larson on 6/5/24.
-//  Updated by Hamna Tameez on 11/25/24.
-//
-
 import UIKit
 
 protocol ClientDelegate {
@@ -83,7 +75,6 @@ class MlaasModel: NSObject, URLSessionDelegate {
                 completion(false, "Server responded with an error.")
                 return
             }
-            print("Image uploaded successfully.")
             completion(true, nil)
         }
         task.resume()
@@ -98,10 +89,11 @@ class MlaasModel: NSObject, URLSessionDelegate {
             return
         }
 
-        // Custom URLSession Configuration
         let sessionConfig = URLSessionConfiguration.default
-        sessionConfig.timeoutIntervalForRequest = 600  // 10 minutes
-        sessionConfig.timeoutIntervalForResource = 1200  // 20 minutes
+        sessionConfig.timeoutIntervalForRequest = 300
+        sessionConfig.timeoutIntervalForResource = 600
+        session = URLSession(configuration: sessionConfig)
+
 
         let session = URLSession(configuration: sessionConfig)
 
@@ -114,11 +106,6 @@ class MlaasModel: NSObject, URLSessionDelegate {
                 print("Training error: \(error.localizedDescription)")
                 completion(.failure(error))
                 return
-            }
-
-            // Log raw server response (if needed)
-            if let data = data, let responseString = String(data: data, encoding: .utf8) {
-                print("Raw server response: \(responseString)") // Optional log
             }
 
             // Check HTTP status
@@ -148,16 +135,11 @@ class MlaasModel: NSObject, URLSessionDelegate {
 
         let payload: [String: Any] = ["feature": feature, "dsid": dsid]
 
-        // **Debugging: Log feature vector before serialization**
-        print("Feature vector before serialization: \(feature)")
-        print("Payload to send: \(payload)")
 
         // Serialize JSON payload
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: payload, options: .prettyPrinted)
             request.httpBody = jsonData
-            // **Debugging: Log serialized JSON**
-            print("Serialized JSON: \(String(data: jsonData, encoding: .utf8) ?? "Invalid JSON")")
         } catch {
             print("Error serializing JSON payload: \(error)")
             completion(.failure(error))
@@ -173,11 +155,6 @@ class MlaasModel: NSObject, URLSessionDelegate {
             guard let data = data else {
                 completion(.failure(NetworkError.serverError))
                 return
-            }
-
-            // **Debugging: Log raw server response**
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print("Raw server response: \(jsonString)")
             }
 
             // Validate HTTP response
@@ -204,9 +181,11 @@ class MlaasModel: NSObject, URLSessionDelegate {
         task.resume()
     }
     
+    
     // MARK: - Dataset Preparation
     func prepareDataset(dsid: Int, dataPath: String, completion: @escaping (Bool, String?) -> Void) {
         let baseURL = "http://\(server_ip):8000/prepare_dataset/"
+        
         guard let url = URL(string: baseURL) else {
             completion(false, NetworkError.invalidURL.localizedDescription)
             return
@@ -216,7 +195,6 @@ class MlaasModel: NSObject, URLSessionDelegate {
         request.httpMethod = RequestEnum.post.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-        // Correct payload
         let payload: [String: Any] = ["dsid": dsid, "data_path": dataPath]
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: payload)
@@ -224,7 +202,7 @@ class MlaasModel: NSObject, URLSessionDelegate {
             completion(false, "Error serializing JSON: \(error.localizedDescription)")
             return
         }
-
+        
         let task = session.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(false, "Error preparing dataset: \(error.localizedDescription)")
@@ -239,6 +217,7 @@ class MlaasModel: NSObject, URLSessionDelegate {
         }
         task.resume()
     }
+
 
     // MARK: - Upload User Data and Process
     func prepareUserDataAndUpload(tutorialData: [(features: [Double], label: String)],
