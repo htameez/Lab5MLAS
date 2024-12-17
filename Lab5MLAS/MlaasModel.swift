@@ -34,7 +34,8 @@ enum NetworkError: Error {
 
 class MlaasModel: NSObject, URLSessionDelegate {
     // MARK: - Properties
-    var server_ip = "192.168.1.92" // Replace with your server IP
+    var server_ip = "192.168.1.92" // zareenah's mac server ip
+    // var server_ip = "172.20.10.2" // zareenah's mac on personal hotspot
     private var dsid: Int = 1 // Default DSID
 
     lazy var session = {
